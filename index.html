@@ -501,19 +501,27 @@
             document.getElementById('sisaTagihanText').innerText = "Rp " + (total - dpInput).toLocaleString('id-ID');
         }
 
-        function hitungEstimasi() {
-            let total = 0;
+        function kirimWhatsAppEstimasi() {
+            const name = document.getElementById('waCustName').value || 'Pelanggan'; 
+            let strings = []; 
             document.querySelectorAll('.est-item-row').forEach(row => {
-                const qty = parseRupiah(row.querySelector('.est-qty').value);
-                const price = parseRupiah(row.querySelector('.est-price').value);
-                total += (qty * price);
+                const n = row.querySelector('.est-name').value; 
+                const q = parseRupiah(row.querySelector('.est-qty').value); 
+                const p = parseRupiah(row.querySelector('.est-price').value);
+                if(n) strings.push(`- ${n} (Qty: ${q} x Rp ${Number(p).toLocaleString('id-ID')})`);
             });
-            const bonus = Number(document.getElementById('waBonusPaket').value || 0);
-            const totalFinal = total + bonus;
 
-            document.getElementById('estTotal').innerText = "Rp " + totalFinal.toLocaleString('id-ID');
-            document.getElementById('estDP').innerText = "Rp " + (totalFinal * 0.5).toLocaleString('id-ID');
-            document.getElementById('estSisa').innerText = "Rp " + (totalFinal * 0.5).toLocaleString('id-ID');
+            // Ambil teks dari paket bonus yang dipilih (jika bukan "Tanpa Paket Bonus")
+            const selectElement = document.getElementById('waBonusPaket');
+            let bonusText = "";
+            if (selectElement.selectedIndex > 0) {
+                const bonusNama = selectElement.options[selectElement.selectedIndex].text;
+                bonusText = `\n*Bonus Paket:* ${bonusNama}`;
+            }
+
+            const text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusText}\n\n*Total:* ${document.getElementById('estTotal').innerText}\n*DP 50%:* ${document.getElementById('estDP').innerText}\n*Sisa Pelunasan:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
+            
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
         async function updateDashboard() {

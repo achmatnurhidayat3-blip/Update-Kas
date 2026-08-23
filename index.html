@@ -146,7 +146,13 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-600 mb-2">Manual DP / Pembayaran awal (Rp)</label>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-semibold text-slate-600">Manual DP / Pembayaran awal</label>
+                                <select id="persenDP" onchange="isManualDP=false; hitungTotal()" class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-2 py-1 outline-none">
+                                    <option value="0.5">DP 50%</option>
+                                    <option value="0.7">DP 70%</option>
+                                </select>
+                            </div>
                             <input type="text" id="inputDP" placeholder="Nominal Bayar/DP" oninput="formatInputRupiah(this); markManualDP(); hitungTotal()" class="w-full p-4 border border-slate-200 rounded-2xl outline-none">
                         </div>
                     </div>
@@ -204,12 +210,20 @@
             <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
                 <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">Kalkulator Estimasi Harga</h2>
                 <input type="text" id="waCustName" placeholder="Nama Calon Pelanggan" class="w-full p-4 border rounded-2xl outline-none">
-                <select id="waBonusPaket" onchange="hitungEstimasi()" class="w-full p-4 border rounded-2xl bg-white">
-                    <option value="0">--- Tanpa Paket Bonus ---</option>
-                    <option value="0">Free Desain, Plastik</option>
-                    <option value="0">Free Desain, Plastik, Label+Cetak Nama</option>
-                    <option value="0">Free Desain, Plastik, Label+Cetak Nama, Undangan Digital</option>
-                </select>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <select id="waBonusPaket" onchange="hitungEstimasi()" class="w-full p-4 border rounded-2xl bg-white outline-none">
+                        <option value="0">--- Tanpa Paket Bonus ---</option>
+                        <option value="0">Free Desain, Plastik</option>
+                        <option value="0">Free Desain, Plastik, Label+Cetak Nama</option>
+                        <option value="0">Free Desain, Plastik, Label+Cetak Nama, Undangan Digital</option>
+                    </select>
+                    <select id="estPersenDP" onchange="hitungEstimasi()" class="w-full p-4 border rounded-2xl bg-white outline-none font-semibold text-slate-700">
+                        <option value="0.5">Pilihan DP 50%</option>
+                        <option value="0.7">Pilihan DP 70%</option>
+                    </select>
+                </div>
+
                 <div id="est-items-container" class="space-y-4">
                     <div class="est-item-row grid grid-cols-3 gap-4 items-center bg-slate-50 p-4 rounded-2xl">
                         <input type="text" placeholder="Nama Barang" class="est-name p-3 rounded-xl border outline-none">
@@ -221,7 +235,7 @@
                 
                 <div class="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100 text-sm font-semibold space-y-2 text-slate-700">
                     <p>Total Estimasi: <span id="estTotal" class="text-slate-900 font-bold">Rp 0</span></p>
-                    <p>Wajib DP 50%: <span id="estDP" class="text-emerald-600 font-bold">Rp 0</span></p>
+                    <p>Wajib DP (<span id="estDPLabel">50%</span>): <span id="estDP" class="text-emerald-600 font-bold">Rp 0</span></p>
                     <p>Sisa Saat Selesai: <span id="estSisa" class="text-rose-500 font-bold">Rp 0</span></p>
                 </div>
                 <button onclick="kirimWhatsAppEstimasi()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
@@ -552,6 +566,7 @@
             container.appendChild(newRow);
         }
 
+        // --- FUNGSI UPDATE MENGHITUNG DP 50% & 70% (FORM INPUT) ---
         function hitungTotal() {
             let total = 0;
             document.querySelectorAll('.item-row').forEach(row => {
@@ -562,15 +577,18 @@
             });
             
             const dpInputElm = document.getElementById('inputDP');
+            const persenDP = Number(document.getElementById('persenDP').value);
+            
             if(!isManualDP && total > 0) {
-                dpInputElm.value = (total * 0.5).toLocaleString('id-ID');
+                dpInputElm.value = (total * persenDP).toLocaleString('id-ID');
             }
 
             const dpInput = parseRupiah(dpInputElm.value);
             document.getElementById('grandTotal').innerText = "Rp " + total.toLocaleString('id-ID');
-            document.getElementById('sisaTagihanText').innerText = "Rp " + (total - dpInput).toLocaleString('id-ID');
+            document.getElementById('sisaTagihanText').innerText = "Rp " + Math.max(0, total - dpInput).toLocaleString('id-ID');
         }
 
+        // --- FUNGSI UPDATE MENGHITUNG DP 50% & 70% (ESTIMASI WHATSAPP) ---
         function hitungEstimasi() {
             let total = 0;
             document.querySelectorAll('.est-item-row').forEach(row => {
@@ -581,9 +599,14 @@
             const bonus = Number(document.getElementById('waBonusPaket').value || 0);
             const totalFinal = total + bonus;
 
+            const persenDP = Number(document.getElementById('estPersenDP').value);
+            const dpAmount = totalFinal * persenDP;
+            const sisaAmount = totalFinal - dpAmount;
+
             document.getElementById('estTotal').innerText = "Rp " + totalFinal.toLocaleString('id-ID');
-            document.getElementById('estDP').innerText = "Rp " + (totalFinal * 0.5).toLocaleString('id-ID');
-            document.getElementById('estSisa').innerText = "Rp " + (totalFinal * 0.5).toLocaleString('id-ID');
+            document.getElementById('estDPLabel').innerText = (persenDP * 100) + "%";
+            document.getElementById('estDP').innerText = "Rp " + dpAmount.toLocaleString('id-ID');
+            document.getElementById('estSisa').innerText = "Rp " + sisaAmount.toLocaleString('id-ID');
         }
 
         async function updateDashboard() {
@@ -808,7 +831,10 @@
             });
 
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
-            const dp = parseRupiah(document.getElementById('inputDP').value || (total * 0.5));
+            
+            // Perbaikan penangkapan DP dengan persentase 
+            const persenDP = Number(document.getElementById('persenDP').value);
+            const dp = parseRupiah(document.getElementById('inputDP').value || (total * persenDP));
 
             await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value });
             clearPmesananForm();
@@ -835,7 +861,6 @@
             showPage('dashboard');
         }
 
-        // --- FUNGSI MODAL PELUNASAN DINAMIS DENGAN PILIHAN METODE BAYAR ---
         function openPelunasanModal(id) {
             const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
             if(!item) return;
@@ -877,7 +902,6 @@
             }
         }
 
-        // --- FUNGSI FORM EDIT NOTA INTERAKTIF ---
         function openEditModal(id) {
             const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
             if(!item) return;
@@ -980,6 +1004,7 @@
         async function deleteNota(id) { if(confirm("Hapus data nota pemesanan?")) { setLoading(true); await sendPost({ tipe: "HapusNota", id: id }); } }
         async function deletePengeluaran(id) { if(confirm("Hapus catatan ini?")) { setLoading(true); await sendPost({ tipe: "HapusPengeluaran", id: id }); } }
 
+        // --- FUNGSI UPDATE WHATSAPP MENYESUAIKAN DP TERPILIH ---
         function kirimWhatsAppEstimasi() {
             const name = document.getElementById('waCustName').value || 'Pelanggan'; 
             let strings = []; 
@@ -992,12 +1017,13 @@
             const bonusText = document.getElementById('waBonusPaket').options[document.getElementById('waBonusPaket').selectedIndex].text;
             let bonusInfo = (document.getElementById('waBonusPaket').value !== "0" && bonusText.includes("---") === false) ? `\n*Paket Bonus:* ${bonusText}` : "";
 
-            const text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP 50%:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
+            const persenStr = (Number(document.getElementById('estPersenDP').value) * 100) + "%";
+            
+            const text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
             
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // --- FUNGSI MENGURAI NOTA CETAK (NAMA BARANG, HARGA SATUAN, QTY, SUBTOTAL) ---
         function parseItemsToPrintRows(itemsString, fallbackTotal) {
             const tbody = document.getElementById('print-items-tbody');
             tbody.innerHTML = '';
@@ -1123,10 +1149,15 @@
                 setTimeout(async () => { await updateDashboard(); setLoading(false); }, 2000);
             } catch(e) { setLoading(false); }
         }
+        
         function setLoading(st) { document.getElementById('loading-state').classList[st ? 'remove' : 'add']('hidden'); }
+        
         function clearPmesananForm() {
-            document.getElementById('custName').value = ''; document.getElementById('inputDP').value = '';
+            document.getElementById('custName').value = ''; 
+            document.getElementById('inputDP').value = '';
+            document.getElementById('persenDP').value = '0.5'; // reset ke DP 50%
             isManualDP = false; 
+            
             document.getElementById('items-container').innerHTML = `
                 <div class="item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
                     <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none">

@@ -409,6 +409,26 @@
         </div>
     </div>
 <Script>
+    function showPage(pageId, element) {
+            // Sembunyikan semua section halaman
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            
+            // Tampilkan halaman yang dipilih
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+
+            // Perbarui status aktif pada menu navigasi sidebar / tombol
+            if (element) {
+                document.querySelectorAll('.nav-btn, nav a').forEach(btn => {
+                    btn.classList.remove('bg-emerald-500', 'text-white', 'shadow-sm', 'font-bold');
+                });
+                element.classList.add('bg-emerald-500', 'text-white', 'shadow-sm', 'font-bold');
+            }
+        }
     function showInput(type, element) {
             document.querySelectorAll('.input-form').forEach(f => f.classList.remove('active'));
             document.getElementById('form-' + type).classList.add('active');

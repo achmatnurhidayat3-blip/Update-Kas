@@ -213,10 +213,10 @@
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <select id="waBonusPaket" onchange="hitungEstimasi()" class="w-full p-4 border rounded-2xl bg-white outline-none">
-                        <option value="0">--- Tanpa Paket Bonus ---</option>
-                        <option value="0">Free Desain, Plastik</option>
-                        <option value="0">Free Desain, Plastik, Label+Cetak Nama</option>
-                        <option value="0">Free Desain, Plastik, Label+Cetak Nama, Undangan Digital</option>
+                        <option value="">--- Tanpa Paket Bonus ---</option>
+                        <option value="Free Desain, Plastik">Free Desain, Plastik</option>
+                        <option value="Free Desain, Plastik, Label+Cetak Nama">Free Desain, Plastik, Label+Cetak Nama</option>
+                        <option value="Free Desain, Plastik, Label+Cetak Nama, Undangan Digital">Free Desain, Plastik, Label+Cetak Nama, Undangan Digital</option>
                     </select>
                     <select id="estPersenDP" onchange="hitungEstimasi()" class="w-full p-4 border rounded-2xl bg-white outline-none font-semibold text-slate-700">
                         <option value="0.5">Pilihan DP 50%</option>
@@ -566,7 +566,6 @@
             container.appendChild(newRow);
         }
 
-        // --- FUNGSI UPDATE MENGHITUNG DP 50% & 70% (FORM INPUT) ---
         function hitungTotal() {
             let total = 0;
             document.querySelectorAll('.item-row').forEach(row => {
@@ -588,7 +587,6 @@
             document.getElementById('sisaTagihanText').innerText = "Rp " + Math.max(0, total - dpInput).toLocaleString('id-ID');
         }
 
-        // --- FUNGSI UPDATE MENGHITUNG DP 50% & 70% (ESTIMASI WHATSAPP) ---
         function hitungEstimasi() {
             let total = 0;
             document.querySelectorAll('.est-item-row').forEach(row => {
@@ -596,8 +594,7 @@
                 const price = parseRupiah(row.querySelector('.est-price').value);
                 total += (qty * price);
             });
-            const bonus = Number(document.getElementById('waBonusPaket').value || 0);
-            const totalFinal = total + bonus;
+            const totalFinal = total; // Bonus sekarang bernilai teks, tidak menambah nominal angka
 
             const persenDP = Number(document.getElementById('estPersenDP').value);
             const dpAmount = totalFinal * persenDP;
@@ -832,7 +829,6 @@
 
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
             
-            // Perbaikan penangkapan DP dengan persentase 
             const persenDP = Number(document.getElementById('persenDP').value);
             const dp = parseRupiah(document.getElementById('inputDP').value || (total * persenDP));
 
@@ -1004,7 +1000,7 @@
         async function deleteNota(id) { if(confirm("Hapus data nota pemesanan?")) { setLoading(true); await sendPost({ tipe: "HapusNota", id: id }); } }
         async function deletePengeluaran(id) { if(confirm("Hapus catatan ini?")) { setLoading(true); await sendPost({ tipe: "HapusPengeluaran", id: id }); } }
 
-        // --- FUNGSI UPDATE WHATSAPP MENYESUAIKAN DP TERPILIH ---
+        // --- FUNGSI WHATSAPP MENANGKAP TEKS BONUS PILIHAN ---
         function kirimWhatsAppEstimasi() {
             const name = document.getElementById('waCustName').value || 'Pelanggan'; 
             let strings = []; 
@@ -1014,8 +1010,9 @@
                 const p = parseRupiah(row.querySelector('.est-price').value);
                 if(n) strings.push(`- ${n} (Qty: ${q} x Rp ${Number(p).toLocaleString('id-ID')})`);
             });
-            const bonusText = document.getElementById('waBonusPaket').options[document.getElementById('waBonusPaket').selectedIndex].text;
-            let bonusInfo = (document.getElementById('waBonusPaket').value !== "0" && bonusText.includes("---") === false) ? `\n*Paket Bonus:* ${bonusText}` : "";
+            
+            const bonusVal = document.getElementById('waBonusPaket').value;
+            let bonusInfo = (bonusVal && bonusVal !== "") ? `\n*Paket Bonus:* ${bonusVal}` : "";
 
             const persenStr = (Number(document.getElementById('estPersenDP').value) * 100) + "%";
             
@@ -1155,7 +1152,7 @@
         function clearPmesananForm() {
             document.getElementById('custName').value = ''; 
             document.getElementById('inputDP').value = '';
-            document.getElementById('persenDP').value = '0.5'; // reset ke DP 50%
+            document.getElementById('persenDP').value = '0.5';
             isManualDP = false; 
             
             document.getElementById('items-container').innerHTML = `

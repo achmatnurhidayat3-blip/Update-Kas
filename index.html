@@ -1,0 +1,553 @@
+ function showInput(type, element) {
+            document.querySelectorAll('.input-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('form-' + type).classList.add('active');
+            document.querySelectorAll('.form-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-500');
+            });
+            element.classList.remove('text-slate-500');
+            element.classList.add('bg-emerald-500', 'text-white', 'shadow-sm');
+        }
+
+        function buildDropdownSelector() {
+            const bulanList = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+            const cbBulan = document.getElementById('searchBulan');
+            const cbTahun = document.getElementById('searchTahun');
+            const now = new Date();
+
+            cbBulan.innerHTML = ''; cbTahun.innerHTML = '';
+            bulanList.forEach((b, i) => {
+                const opt = document.createElement('option'); opt.value = i; opt.innerText = b;
+                if(i === now.getMonth()) opt.selected = true;
+                cbBulan.appendChild(opt);
+            });
+            for(let th = now.getFullYear() - 2; th <= now.getFullYear() + 2; th++) {
+                const opt = document.createElement('option'); opt.value = th; opt.innerText = th;
+                if(th === now.getFullYear()) opt.selected = true;
+                cbTahun.appendChild(opt);
+            }
+        }
+
+        function addItem() {
+            const container = document.getElementById('items-container');
+            const newRow = document.createElement('div');
+            // Mengubah grid-cols-4 menjadi responsif agar baris baru ikut melipat rapi di HP
+            newRow.className = 'item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100';
+            newRow.innerHTML = `
+                <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none">
+                <input type="text" placeholder="Qty" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>`;
+            container.appendChild(newRow);
+        }
+
+        function addEstItem() {
+            const container = document.getElementById('est-items-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'est-item-row grid grid-cols-3 gap-4 items-center bg-slate-50 p-4 rounded-2xl';
+            newRow.innerHTML = `
+                <input type="text" placeholder="Nama Barang" class="est-name p-3 rounded-xl border outline-none">
+                <input type="text" placeholder="Qty" class="est-qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungEstimasi()">
+                <input type="text" placeholder="Harga Satuan" class="est-price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungEstimasi()">`;
+            container.appendChild(newRow);
+        }
+
+        function hitungTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-row').forEach(row => {
+                const qty = parseRupiah(row.querySelector('.qty').value);
+                const price = parseRupiah(row.querySelector('.price').value);
+                total += (qty * price);
+                row.querySelector('.subtotal-text').innerText = "Rp " + (qty * price).toLocaleString('id-ID');
+            });
+            
+            // Auto isi DP 50% jika belum diedit manual
+            const dpInputElm = document.getElementById('inputDP');
+            if(!isManualDP && total > 0) {
+                dpInputElm.value = (total * 0.5).toLocaleString('id-ID');
+            }
+
+            const dpInput = parseRupiah(dpInputElm.value);
+            document.getElementById('grandTotal').innerText = "Rp " + total.toLocaleString('id-ID');
+            document.getElementById('sisaTagihanText').innerText = "Rp " + (total - dpInput).toLocaleString('id-ID');
+        }
+
+        function hitungEstimasi() {
+            let total = 0;
+            document.querySelectorAll('.est-item-row').forEach(row => {
+                const qty = parseRupiah(row.querySelector('.est-qty').value);
+                const price = parseRupiah(row.querySelector('.est-price').value);
+                total += (qty * price);
+            });
+            const bonus = Number(document.getElementById('waBonusPaket').value || 0);
+            const totalFinal = total + bonus;
+
+            document.getElementById('estTotal').innerText = "Rp " + totalFinal.toLocaleString('id-ID');
+            document.getElementById('estDP').innerText = "Rp " + (totalFinal * 0.5).toLocaleString('id-ID');
+            document.getElementById('estSisa').innerText = "Rp " + (totalFinal * 0.5).toLocaleString('id-ID');
+        }
+
+        async function updateDashboard() {
+            setLoading(true);
+            try {
+                const res = await fetch(`${API_URL}?action=getDashboard`);
+                const data = await res.json();
+                globalDataCache = data;
+
+                const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+
+                document.getElementById('saldoCash').innerText = fmt(data.cash);
+                document.getElementById('saldoBNI').innerText = fmt(data.bni);
+                document.getElementById('saldoBRI').innerText = fmt(data.bri);
+                document.getElementById('totalPemasukan').innerText = fmt(data.masukBulanIni);
+                document.getElementById('totalPengeluaran').innerText = fmt(data.keluarBulanIni);
+                document.getElementById('totalKeuntungan').innerText = fmt(data.labaBersih);
+                document.getElementById('totalPiutang').innerText = fmt(data.piutang);
+                
+                document.getElementById('miniMasuk').innerText = fmt(data.masukBulanIni);
+                document.getElementById('miniKeluar').innerText = fmt(data.keluarBulanIni);
+                document.getElementById('miniLaba').innerText = fmt(data.labaBersih);
+
+                localNotaList = data.riwayatNota;
+                localExpList = data.riwayatExp;
+
+                renderOrderflowTable(data.riwayatNota);
+                renderSplitTablesMaster();
+
+                setLoading(false);
+            } catch(e) { console.error("Dashboard error");
+                setLoading(false);
+            }
+        }
+
+        async function eksekusiCariBulanTahun() {
+            setLoading(true);
+            const m = document.getElementById('searchBulan').value;
+            const y = document.getElementById('searchTahun').value;
+            try {
+                const res = await fetch(`${API_URL}?action=searchByMonth&month=${m}&year=${y}`);
+                const data = await res.json();
+
+                const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+                document.getElementById('miniMasuk').innerText = fmt(data.masuk || 0);
+                document.getElementById('miniKeluar').innerText = fmt(data.keluar || 0);
+                document.getElementById('miniLaba').innerText = fmt(data.laba || 0);
+
+                localNotaList = data.nota || [];
+                localExpList = data.exp || [];
+
+                renderSplitTablesMaster();
+            } catch(e) { 
+                console.error("Gagal melakukan pencarian bulanan:", e);
+            }
+            setLoading(false);
+        }
+
+        function filterKategoriRiwayat(kategori, element) {
+            currentKategoriTab = kategori;
+
+            document.querySelectorAll('.riwayat-cat-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-955', 'bg-slate-950', 'text-white', 'shadow-sm', 'font-bold');
+                btn.classList.add('text-slate-500', 'font-semibold');
+            });
+
+            element.classList.remove('text-slate-500', 'font-semibold');
+            element.classList.add('bg-slate-950', 'text-white', 'shadow-sm', 'font-bold');
+
+            if (kategori === "all") {
+                document.getElementById('container-tabel-nota').style.display = 'block';
+                document.getElementById('container-tabel-pengeluaran').style.display = 'block';
+                document.getElementById('container-tabel-peralihan').style.display = 'block';
+            } else if (kategori === "nota") {
+                document.getElementById('container-tabel-nota').style.display = 'block';
+                document.getElementById('container-tabel-pengeluaran').style.display = 'none';
+                document.getElementById('container-tabel-peralihan').style.display = 'none';
+            } else if (kategori === "pengeluaran") {
+                document.getElementById('container-tabel-nota').style.display = 'none';
+                document.getElementById('container-tabel-pengeluaran').style.display = 'block';
+                document.getElementById('container-tabel-peralihan').style.display = 'none';
+            } else if (kategori === "peralihan") {
+                document.getElementById('container-tabel-nota').style.display = 'none';
+                document.getElementById('container-tabel-pengeluaran').style.display = 'none';
+                document.getElementById('container-tabel-peralihan').style.display = 'block';
+            }
+
+            renderSplitTablesMaster();
+        }
+
+        function renderSplitTablesMaster() {
+            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+            
+            const tbodyNota = document.getElementById('tbody-nota');
+            tbodyNota.innerHTML = '';
+            const listNotaReal = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
+
+            if(listNotaReal.length === 0) {
+                tbodyNota.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
+            } else {
+                listNotaReal.forEach(r => {
+                    let itemDesc = r[2]; try { itemDesc = JSON.parse(r[2]); } catch(e){}
+                    
+                    // 4 Tombol Action Riwayat
+                    let btnAwal = `<button onclick="cetakNotaStruk('${r[0]}', false)" class="text-sky-500 p-1 hover:bg-sky-50 rounded" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice"></i></button>`;
+                    let btnLunas = `<button onclick="if(confirm('Proses pelunasan ke database dan cetak nota lunas?')) { eksekusiPelunasanDanCetak('${r[0]}'); }" class="text-emerald-500 p-1 hover:bg-emerald-50 rounded" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle"></i></button>`;
+                    let btnEdit = `<button onclick="openEditModal('${r[0]}')" class="text-amber-500 p-1 hover:bg-amber-50 rounded" title="Edit Transaksi"><i class="fas fa-edit"></i></button>`;
+                    let btnHapus = `<button onclick="deleteNota('${r[0]}')" class="text-rose-500 p-1 hover:bg-rose-50 rounded" title="Hapus Data"><i class="fas fa-trash-alt"></i></button>`;
+
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b text-xs hover:bg-slate-50";
+                    tr.innerHTML = `
+                        <td class="p-4 font-bold text-slate-800">${r[1]}<br><span class="text-[10px] font-medium text-slate-400">${itemDesc}</span></td>
+                        <td class="p-4 font-semibold">${fmt(r[3])}</td>
+                        <td class="p-4 text-rose-500 font-bold">${fmt(r[5])}</td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center gap-1.5 text-base">
+                                ${btnAwal}
+                                ${btnLunas}
+                                ${btnEdit}
+                                ${btnHapus}
+                            </div>
+                        </td>`;
+                    tbodyNota.appendChild(tr);
+                });
+            }
+
+            // Operasional & Peralihan
+            const tbodyExp = document.getElementById('tbody-pengeluaran');
+            const tbodyMutasi = document.getElementById('tbody-peralihan');
+            tbodyExp.innerHTML = ''; tbodyMutasi.innerHTML = '';
+
+            const listPureExp = localExpList.filter(r => !r[1].toString().startsWith("Peralihan ke") && !r[1].toString().startsWith("Mutasi keluar"));
+            const listMutasiOnly = localExpList.filter(r => r[1].toString().startsWith("Peralihan ke") || r[1].toString().startsWith("Mutasi keluar"));
+
+            if(listPureExp.length === 0) {
+                tbodyExp.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
+            } else {
+                listPureExp.forEach(r => {
+                    const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button onclick="deletePengeluaran('${r[4]}')" class="text-rose-500 p-1"><i class="fas fa-trash-alt"></i></button></td>`;
+                    tbodyExp.appendChild(tr);
+                });
+            }
+
+            if(listMutasiOnly.length === 0) {
+                tbodyMutasi.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
+            } else {
+                listMutasiOnly.forEach(r => {
+                    const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium italic text-blue-600">${r[1]}</td><td class="p-4 font-bold text-slate-700">${fmt(r[2])}</td><td class="p-4 text-center"><button onclick="deletePengeluaran('${r[4]}')" class="text-rose-500 p-1"><i class="fas fa-trash-alt"></i></button></td>`;
+                    tbodyMutasi.appendChild(tr);
+                });
+            }
+        }
+
+        function liveFilterText() {
+            const txt = document.getElementById('liveSearchInput').value.toLowerCase();
+            document.querySelectorAll('#tbody-nota tr, #tbody-pengeluaran tr, #tbody-peralihan tr').forEach(tr => {
+                if(tr.innerText.toLowerCase().includes(txt)) tr.style.display = '';
+                else tr.style.display = 'none';
+            });
+        }
+
+        function renderOrderflowTable(riwayatNota) {
+            const tbody = document.getElementById('table-orderflow'); 
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            const now = new Date();
+
+            if(!riwayatNota || riwayatNota.length === 0) return;
+
+            riwayatNota.forEach(r => {
+                if (r[0] && r[0].toString().startsWith("TRF-")) return;
+                
+                const tglOrder = r[7] ? new Date(r[7]) : new Date();
+                
+                // LOGIKA SAKTI RESET BULANAN: Jika bulan & tahun tidak sama dengan hari ini, lompati/sembunyikan otomatis
+                if (tglOrder.getMonth() !== now.getMonth() || tglOrder.getFullYear() !== now.getFullYear()) return;
+
+                const tglDeadline = new Date(tglOrder.getTime() + (7 * 24 * 60 * 60 * 1000));
+                const daysLeft = Math.ceil((tglDeadline - new Date()) / (1000 * 60 * 60 * 24));
+                const sisaPiutang = Number(r[5] || 0);
+
+                let statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Aman</span>';
+                let sisaTeks = `Sisa ${daysLeft} Hari`;
+
+                // Jika sisa piutang Rp 0, ubah status jadi Selesai & hilangkan hitungan harinya
+                if (sisaPiutang === 0) {
+                    statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-50 text-blue-700 border border-blue-200">Selesai</span>';
+                    sisaTeks = "-";
+                } else if (daysLeft < 0) {
+                    statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-rose-50 text-rose-700 border border-rose-200">Overdue</span>';
+                    sisaTeks = `<span class="text-rose-600 font-bold">Lewat ${Math.abs(daysLeft)} Hari</span>`;
+                } else if (daysLeft <= 2) { 
+                    statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200">Urgent</span>'; 
+                }
+
+                let itemsClean = r[2] || '-'; 
+                try { if(itemsClean.startsWith('[')) itemsClean = JSON.parse(r[2]); } catch(e) {}
+                
+                const tr = document.createElement('tr'); 
+                tr.className = "hover:bg-slate-50 border-b text-xs";
+                tr.innerHTML = `
+                    <td class="p-4 font-bold">${r[1] || '-'}</td>
+                    <td class="p-4 max-w-xs truncate">${itemsClean}</td>
+                    <td class="p-4">${tglOrder.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</td>
+                    <td class="p-4 font-semibold text-indigo-600">${tglDeadline.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</td>
+                    <td class="p-4">${sisaTeks}</td>
+                    <td class="p-4 text-center">${statusBadge}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function simpanData() {
+            const custName = document.getElementById('custName').value;
+            if(!custName) return alert("Nama pelanggan wajib terisi!");
+            setLoading(true);
+
+            let arrItems = [];
+            document.querySelectorAll('.item-row').forEach(row => {
+                const n = row.querySelector('.item-name').value;
+                const q = parseRupiah(row.querySelector('.qty').value);
+                const p = parseRupiah(row.querySelector('.price').value);
+                if(n) arrItems.push(`${n} (${q}x @${Number(p).toLocaleString('id-ID')})`);
+            });
+
+            const total = parseRupiah(document.getElementById('grandTotal').innerText);
+            const dp = parseRupiah(document.getElementById('inputDP').value || (total * 0.5));
+
+            await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value });
+            clearPmesananForm();
+        }
+
+        async function simpanPengeluaran() {
+            const ket = document.getElementById('expKeterangan').value;
+            const total = parseRupiah(document.getElementById('expTotal').value);
+            if(!ket || !total) return alert("Form wajib terisi!");
+            setLoading(true);
+            await sendPost({ tipe: "Pengeluaran", items: ket, total: total, metode: document.getElementById('expMetode').value });
+            document.getElementById('expKeterangan').value = ''; document.getElementById('expTotal').value = '';
+            showPage('dashboard');
+        }
+
+        async function simpanMutasi() {
+            const dari = document.getElementById('mutasiDari').value;
+            const ke = document.getElementById('mutasiKe').value;
+            const total = parseRupiah(document.getElementById('mutasiTotal').value);
+            if(!total || dari === ke) return alert("Cek pengisian form transfer!");
+            setLoading(true);
+            await sendPost({ tipe: "Peralihan", dari: dari, ke: ke, total: total });
+            document.getElementById('mutasiTotal').value = '';
+            showPage('dashboard');
+        }
+
+        async function lunaskanNota(id) { if(confirm("Lunaskan sisa pembayaran nota ini?")) { setLoading(true); await sendPost({ tipe: "Pelunasan", id: id }); } }
+        
+        function openEditModal(id) {
+            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString()); if(!item) return;
+            document.getElementById('edit-id').value = item[0]; document.getElementById('edit-nama').value = item[1];
+            document.getElementById('edit-items').value = item[2]; 
+            document.getElementById('edit-total').value = Number(item[3]).toLocaleString('id-ID');
+            document.getElementById('edit-dp').value = Number(item[4]).toLocaleString('id-ID');
+            document.getElementById('edit-metode').value = item[6];
+            document.getElementById('modal-edit').classList.remove('hidden');
+        }
+        function closeEditModal() { document.getElementById('modal-edit').classList.add('hidden'); }
+        async function submitEditNota(e) {
+            e.preventDefault(); closeEditModal(); setLoading(true);
+            await sendPost({ 
+                tipe: "EditNota", 
+                id: document.getElementById('edit-id').value, 
+                nama: document.getElementById('edit-nama').value, 
+                items: document.getElementById('edit-items').value, 
+                total: parseRupiah(document.getElementById('edit-total').value), 
+                dp: parseRupiah(document.getElementById('edit-dp').value), 
+                metode: document.getElementById('edit-metode').value 
+            });
+        }
+
+        async function deleteNota(id) { if(confirm("Hapus data nota pemesanan?")) { setLoading(true); await sendPost({ tipe: "HapusNota", id: id }); } }
+        async function deletePengeluaran(id) { if(confirm("Hapus catatan ini?")) { setLoading(true); await sendPost({ tipe: "HapusPengeluaran", id: id }); } }
+
+        function kirimWhatsAppEstimasi() {
+            const name = document.getElementById('waCustName').value || 'Pelanggan'; 
+            let strings = []; 
+            document.querySelectorAll('.est-item-row').forEach(row => {
+                const n = row.querySelector('.est-name').value; 
+                const q = parseRupiah(row.querySelector('.est-qty').value); 
+                const p = parseRupiah(row.querySelector('.est-price').value);
+                if(n) strings.push(`- ${n} (Qty: ${q} x Rp ${Number(p).toLocaleString('id-ID')})`);
+            });
+            const text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}\n\n*Total:* ${document.getElementById('estTotal').innerText}\n*DP 50%:* ${document.getElementById('estDP').innerText}\n*Sisa Pelunasan:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
+            
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function parseItemsToPrintRows(itemsString, fallbackTotal) {
+            const tbody = document.getElementById('print-items-tbody');
+            tbody.innerHTML = '';
+
+            if (itemsString && itemsString.includes('x @')) {
+                const parts = itemsString.split(', ');
+                parts.forEach(p => {
+                    const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
+                    if (matches) {
+                        const name = matches[1];
+                        const qty = matches[2];
+                        const price = Number(matches[3].replace(/[^0-9]/g, ''));
+                        const sub = qty * price;
+
+                        const tr = document.createElement('tr');
+                        tr.className = "border-b border-slate-100";
+                        tr.innerHTML = `<td class="p-3 font-bold text-slate-900">${name}</td><td class="p-3 text-center">${qty}</td><td class="p-3 text-right font-semibold">Rp ${sub.toLocaleString('id-ID')}</td>`;
+                        tbody.appendChild(tr);
+                    }
+                });
+            } else {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-100";
+                tr.innerHTML = `<td class="p-3 font-bold text-slate-900">${itemsString || '-'}</td><td class="p-3 text-center">1</td><td class="p-3 text-right font-semibold">Rp ${Number(fallbackTotal).toLocaleString('id-ID')}</td>`;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // Fungsi Sinkronisasi Data Pelunasan Database & Print Out Struk
+        async function eksekusiPelunasanDanCetak(id) {
+            setLoading(true);
+            try {
+              // Tembak aksi pelunasan ke file kode.gs Google Apps Script
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'text/plain' }, 
+                    body: JSON.stringify({ tipe: "Pelunasan", id: id }) 
+                });
+
+              // Picu jendela cetak nota secara otomatis dengan status lunas (true)
+                cetakNotaStruk(id, true);
+
+              // Beri delay 2 detik untuk pembaruan cloud, lalu refresh tampilan data dashboard
+                setTimeout(async () => { 
+                    await updateDashboard(); 
+                    setLoading(false); 
+                }, 2000);
+            } catch (error) {
+                console.error("Gagal melakukan pelunasan otomatis:", error);
+                setLoading(false);
+            }
+        }
+    
+        function cetakNotaStruk(id, isForceLunas) {
+            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
+            if(!item) return;
+            
+            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+            const totalBayar = Number(item[3] || 0);
+            
+            let dpBayar = isForceLunas ? totalBayar : Number(item[4] || 0);
+            let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
+            
+            document.getElementById('print-cust').innerText = item[1];
+            const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+            document.getElementById('print-tgl').innerText = tglFormatted;
+            
+            parseItemsToPrintRows(item[2], totalBayar);
+            
+            document.getElementById('print-total').innerText = fmt(totalBayar);
+            document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+            document.getElementById('print-sisa').innerText = fmt(sisaHutang);
+            
+            // LOGIKA NAMA FILE PDF: Merubah judul dokumen sementara menjadi Nama_Tanggal sebelum print
+            const oldTitle = document.title;
+            const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
+            const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
+            document.title = `${cleanCustName}_${cleanDate}`;
+            
+            window.print();
+            
+            // Kembalikan judul tab browser asli setelah cetak selesai
+            setTimeout(() => { document.title = oldTitle; }, 1000);
+        }
+
+        function simpanDanCetak() {
+            const custName = document.getElementById('custName').value;
+            if(!custName) return alert("Masukkan nama pelanggan untuk cetak nota!");
+
+            let listText = [];
+            const tbody = document.getElementById('print-items-tbody');
+            tbody.innerHTML = '';
+
+            document.querySelectorAll('.item-row').forEach(row => {
+                const n = row.querySelector('.item-name').value;
+                const q = parseRupiah(row.querySelector('.qty').value);
+                const p = parseRupiah(row.querySelector('.price').value);
+
+                if(n) {
+                    listText.push(`${n} (${q}x @${p.toLocaleString('id-ID')})`);
+                    const sub = q * p;
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-slate-100";
+                    tr.innerHTML = `<td class="p-3 font-bold text-slate-900">${n}</td><td class="p-3 text-center">${q}</td><td class="p-3 text-right font-semibold">Rp ${sub.toLocaleString('id-ID')}</td>`;
+                        tbody.appendChild(tr);
+                }
+            });
+
+            const total = parseRupiah(document.getElementById('grandTotal').innerText);
+            const dpVal = parseRupiah(document.getElementById('inputDP').value || 0);
+            // Dikunci menggunakan Math.max agar sisa tagihan tidak pernah bernilai minus (-) jika DP-nya lunas/lebih
+            const sisaVal = Math.max(0, total - dpVal);
+
+            const fmt = (val) => "Rp " + Number(val).toLocaleString('id-ID');
+
+            document.getElementById('print-cust').innerText = custName;
+            document.getElementById('print-tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+
+            document.getElementById('print-total').innerText = fmt(total);
+            document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
+            document.getElementById('print-sisa').innerText = fmt(sisaVal);
+
+            const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");
+            const cDate = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
+            const originalTitle = document.title;
+            document.title = `${cName}_${cDate}`;
+            
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+
+            simpanData();
+        }
+
+        async function sendPost(payload) {
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+                setTimeout(async () => { await updateDashboard(); setLoading(false); }, 2000);
+            } catch(e) { setLoading(false); }
+        }
+        function setLoading(st) { document.getElementById('loading-state').classList[st ? 'remove' : 'add']('hidden'); }
+        function clearPmesananForm() {
+            document.getElementById('custName').value = ''; document.getElementById('inputDP').value = '';
+            isManualDP = false; // Reset pelacakan manual DP
+            document.getElementById('items-container').innerHTML = `
+                <div class="item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none">
+                    <input type="text" placeholder="Qty" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                    <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()"><span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>
+                </div>`;
+            
+            // Form dihitung ulang jadi Rp 0 kembali bersih
+            hitungTotal(); 
+            
+            // Pengaman cloud: Tetap lakukan penyegaran data dashboard di background tanpa memindahkan halaman aktif kasir
+            const btnInput = document.querySelector("nav a[onclick*='input']");
+            showPage('input', btnInput);
+        }
+
+        window.onload = function() {
+            document.getElementById('main-logo-img').src = LOGO_URL; 
+            document.getElementById('print-logo-img').src = LOGO_URL; 
+            
+            buildDropdownSelector();
+            updateDashboard();
+        };
+    </script>
+</body>
+</html>

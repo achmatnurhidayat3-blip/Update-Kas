@@ -151,6 +151,7 @@
                                 <select id="persenDP" onchange="isManualDP=false; hitungTotal()" class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-2 py-1 outline-none">
                                     <option value="0.5">DP 50%</option>
                                     <option value="0.7">DP 70%</option>
+                                    <option value="1">Lunas 100%</option>
                                 </select>
                             </div>
                             <input type="text" id="inputDP" placeholder="Nominal Bayar/DP" oninput="formatInputRupiah(this); markManualDP(); hitungTotal()" class="w-full p-4 border border-slate-200 rounded-2xl outline-none">
@@ -221,6 +222,7 @@
                     <select id="estPersenDP" onchange="hitungEstimasi()" class="w-full p-4 border rounded-2xl bg-white outline-none font-semibold text-slate-700">
                         <option value="0.5">Pilihan DP 50%</option>
                         <option value="0.7">Pilihan DP 70%</option>
+                        <option value="1">Pilihan Lunas 100%</option>
                     </select>
                 </div>
 
@@ -235,8 +237,8 @@
                 
                 <div class="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100 text-sm font-semibold space-y-2 text-slate-700">
                     <p>Total Estimasi: <span id="estTotal" class="text-slate-900 font-bold">Rp 0</span></p>
-                    <p>Wajib DP (<span id="estDPLabel">50%</span>): <span id="estDP" class="text-emerald-600 font-bold">Rp 0</span></p>
-                    <p>Sisa Saat Selesai: <span id="estSisa" class="text-rose-500 font-bold">Rp 0</span></p>
+                    <p id="estDPContainer">Wajib DP (<span id="estDPLabel">50%</span>): <span id="estDP" class="text-emerald-600 font-bold">Rp 0</span></p>
+                    <p id="estSisaContainer">Sisa Saat Selesai: <span id="estSisa" class="text-rose-500 font-bold">Rp 0</span></p>
                 </div>
                 <button onclick="kirimWhatsAppEstimasi()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
                     <i class="fab fa-whatsapp text-xl"></i> KIRIM RINCIAN KE WHATSAPP
@@ -472,21 +474,21 @@
                     LUNAS
                 </div>
                 <div class="text-xs font-semibold text-slate-600 space-y-1">
-                    <p>Metode Bayar DP: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
+                    <p id="print-metode-container">Metode Pembayaran: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
                     <p id="print-metode-lunas-container" class="hidden">Metode Bayar Pelunasan: <span id="print-metode-lunas" class="font-bold text-slate-800">-</span></p>
                 </div>
             </div>
 
             <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
-                <div class="flex justify-between items-center border-b border-slate-200 p-3 bg-slate-50/50">
+                <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
                     <span class="text-slate-500">Total Keseluruhan</span>
                     <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-slate-200 p-3 text-emerald-700 bg-emerald-50/20">
+                <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
                     <span id="print-dp-label">Uang Muka / DP</span>
                     <span id="print-dp" class="font-bold text-right">- Rp 0</span>
                 </div>
-                <div class="flex justify-between items-center p-3 text-rose-600 bg-rose-50/20 text-sm font-black">
+                <div class="flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black" id="print-sisa-row">
                     <span>Sisa Pelunasan</span>
                     <span id="print-sisa" class="text-right">Rp 0</span>
                 </div>
@@ -590,7 +592,11 @@
             const persenDP = Number(document.getElementById('persenDP').value);
             
             if(!isManualDP && total > 0) {
-                dpInputElm.value = (total * persenDP).toLocaleString('id-ID');
+                if (persenDP === 1) {
+                    dpInputElm.value = total.toLocaleString('id-ID');
+                } else {
+                    dpInputElm.value = (total * persenDP).toLocaleString('id-ID');
+                }
             }
 
             const dpInput = parseRupiah(dpInputElm.value);
@@ -605,16 +611,25 @@
                 const price = parseRupiah(row.querySelector('.est-price').value);
                 total += (qty * price);
             });
-            const totalFinal = total; // Bonus sekarang bernilai teks, tidak menambah nominal angka
+            const totalFinal = total; 
 
             const persenDP = Number(document.getElementById('estPersenDP').value);
-            const dpAmount = totalFinal * persenDP;
-            const sisaAmount = totalFinal - dpAmount;
+            
+            if (persenDP === 1) {
+                document.getElementById('estDPContainer').style.display = 'none';
+                document.getElementById('estSisaContainer').style.display = 'none';
+            } else {
+                document.getElementById('estDPContainer').style.display = 'block';
+                document.getElementById('estSisaContainer').style.display = 'block';
+                const dpAmount = totalFinal * persenDP;
+                const sisaAmount = totalFinal - dpAmount;
+
+                document.getElementById('estDPLabel').innerText = (persenDP * 100) + "%";
+                document.getElementById('estDP').innerText = "Rp " + dpAmount.toLocaleString('id-ID');
+                document.getElementById('estSisa').innerText = "Rp " + sisaAmount.toLocaleString('id-ID');
+            }
 
             document.getElementById('estTotal').innerText = "Rp " + totalFinal.toLocaleString('id-ID');
-            document.getElementById('estDPLabel').innerText = (persenDP * 100) + "%";
-            document.getElementById('estDP').innerText = "Rp " + dpAmount.toLocaleString('id-ID');
-            document.getElementById('estSisa').innerText = "Rp " + sisaAmount.toLocaleString('id-ID');
         }
 
         async function updateDashboard() {
@@ -841,7 +856,7 @@
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
             
             const persenDP = Number(document.getElementById('persenDP').value);
-            const dp = parseRupiah(document.getElementById('inputDP').value || (total * persenDP));
+            const dp = parseRupiah(document.getElementById('inputDP').value || (persenDP === 1 ? total : total * persenDP));
 
             await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value });
             clearPmesananForm();
@@ -897,7 +912,6 @@
                     body: JSON.stringify({ tipe: "Pelunasan", id: id, metode: metodeBaru }) 
                 });
 
-                // Simpan metode pelunasan sementara untuk keperluan cetak struk langsung
                 window._lastPelunasanMetode = metodeBaru;
                 cetakNotaStruk(id, true);
 
@@ -1013,7 +1027,6 @@
         async function deleteNota(id) { if(confirm("Hapus data nota pemesanan?")) { setLoading(true); await sendPost({ tipe: "HapusNota", id: id }); } }
         async function deletePengeluaran(id) { if(confirm("Hapus catatan ini?")) { setLoading(true); await sendPost({ tipe: "HapusPengeluaran", id: id }); } }
 
-        // --- FUNGSI WHATSAPP MENANGKAP TEKS BONUS PILIHAN ---
         function kirimWhatsAppEstimasi() {
             const name = document.getElementById('waCustName').value || 'Pelanggan'; 
             let strings = []; 
@@ -1027,9 +1040,15 @@
             const bonusVal = document.getElementById('waBonusPaket').value;
             let bonusInfo = (bonusVal && bonusVal !== "") ? `\n*Paket Bonus:* ${bonusVal}` : "";
 
-            const persenStr = (Number(document.getElementById('estPersenDP').value) * 100) + "%";
+            const persenVal = Number(document.getElementById('estPersenDP').value);
+            let text = "";
             
-            const text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
+            if (persenVal === 1) {
+                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Tagihan (Lunas):* ${document.getElementById('estTotal').innerText}\n\nTerima kasih kak! ✨`;
+            } else {
+                const persenStr = (persenVal * 100) + "%";
+                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
+            }
             
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
@@ -1080,6 +1099,9 @@
             let dpBayar = isForceLunas ? totalBayar : Number(item[4] || 0);
             let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
             
+            // Cek apakah murni lunas (sisa piutang 0 atau dipaksa lunas)
+            const isLunasMurni = (sisaHutang === 0 || isForceLunas);
+
             document.getElementById('print-cust').innerText = item[1];
             const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
             document.getElementById('print-tgl').innerText = tglFormatted;
@@ -1087,22 +1109,31 @@
             parseItemsToPrintRows(item[2], totalBayar);
             
             document.getElementById('print-total').innerText = fmt(totalBayar);
-            document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
-            document.getElementById('print-dp-label').innerText = isForceLunas ? "Pembayaran / Lunas" : "Uang Muka / DP";
-            document.getElementById('print-sisa').innerText = fmt(sisaHutang);
             
-            // Set Metode Pembayaran
-            document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
+            const dpRow = document.getElementById('print-dp-row');
+            const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
+            const metodeContainer = document.getElementById('print-metode-container');
             const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
-            
-            if (isForceLunas) {
+
+            if (isLunasMurni) {
+                // Sembunyikan baris DP dan Sisa Piutang jika langsung lunas
+                dpRow.style.display = 'none';
+                sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                metodeLunasContainer.classList.remove('hidden');
-                document.getElementById('print-metode-lunas').innerText = window._lastPelunasanMetode || item[6] || 'Cash';
-            } else {
-                stempelElm.classList.add('hidden');
+                metodeContainer.style.display = 'block';
                 metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = isForceLunas ? (window._lastPelunasanMetode || item[6] || 'Cash') : (item[6] || 'Cash');
+            } else {
+                dpRow.style.display = 'flex';
+                sisaRow.style.display = 'flex';
+                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+                document.getElementById('print-sisa').innerText = fmt(sisaHutang);
+                stempelElm.classList.add('hidden');
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
             }
 
             const oldTitle = document.title;
@@ -1119,7 +1150,6 @@
             const custName = document.getElementById('custName').value;
             if(!custName) return alert("Masukkan nama pelanggan untuk cetak nota!");
 
-            let listText = [];
             const tbody = document.getElementById('print-items-tbody');
             tbody.innerHTML = '';
 
@@ -1129,7 +1159,6 @@
                 const p = parseRupiah(row.querySelector('.price').value);
 
                 if(n) {
-                    listText.push(`${n} (${q}x @${p.toLocaleString('id-ID')})`);
                     const sub = q * p;
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-slate-100";
@@ -1145,6 +1174,7 @@
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
             const dpVal = parseRupiah(document.getElementById('inputDP').value || 0);
             const sisaVal = Math.max(0, total - dpVal);
+            const isLunasMurni = (sisaVal === 0);
 
             const fmt = (val) => "Rp " + Number(val).toLocaleString('id-ID');
 
@@ -1152,14 +1182,31 @@
             document.getElementById('print-tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 
             document.getElementById('print-total').innerText = fmt(total);
-            document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
-            document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-            document.getElementById('print-sisa').innerText = fmt(sisaVal);
+            
+            const dpRow = document.getElementById('print-dp-row');
+            const sisaRow = document.getElementById('print-sisa-row');
+            const stempelElm = document.getElementById('print-stempel-lunas');
+            const metodeContainer = document.getElementById('print-metode-container');
+            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
 
-            // Set Metode Pembayaran untuk cetak langsung saat input
-            document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
-            document.getElementById('print-stempel-lunas').classList.add('hidden');
-            document.getElementById('print-metode-lunas-container').classList.add('hidden');
+            if (isLunasMurni) {
+                dpRow.style.display = 'none';
+                sisaRow.style.display = 'none';
+                stempelElm.classList.remove('hidden');
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+            } else {
+                dpRow.style.display = 'flex';
+                sisaRow.style.display = 'flex';
+                document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
+                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+                document.getElementById('print-sisa').innerText = fmt(sisaVal);
+                stempelElm.classList.add('hidden');
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+            }
 
             const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");
             const cDate = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");

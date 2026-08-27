@@ -465,7 +465,18 @@
             </table>
         </div>
 
-        <div class="flex justify-end">
+        <div class="flex justify-between items-end">
+            <!-- STEMPEL LUNAS & INFO METODE PEMBAYARAN -->
+            <div class="flex flex-col gap-3">
+                <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
+                    LUNAS
+                </div>
+                <div class="text-xs font-semibold text-slate-600 space-y-1">
+                    <p>Metode Bayar DP: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
+                    <p id="print-metode-lunas-container" class="hidden">Metode Bayar Pelunasan: <span id="print-metode-lunas" class="font-bold text-slate-800">-</span></p>
+                </div>
+            </div>
+
             <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
                 <div class="flex justify-between items-center border-b border-slate-200 p-3 bg-slate-50/50">
                     <span class="text-slate-500">Total Keseluruhan</span>
@@ -886,6 +897,8 @@
                     body: JSON.stringify({ tipe: "Pelunasan", id: id, metode: metodeBaru }) 
                 });
 
+                // Simpan metode pelunasan sementara untuk keperluan cetak struk langsung
+                window._lastPelunasanMetode = metodeBaru;
                 cetakNotaStruk(id, true);
 
                 setTimeout(async () => { 
@@ -1078,6 +1091,20 @@
             document.getElementById('print-dp-label').innerText = isForceLunas ? "Pembayaran / Lunas" : "Uang Muka / DP";
             document.getElementById('print-sisa').innerText = fmt(sisaHutang);
             
+            // Set Metode Pembayaran
+            document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
+            const stempelElm = document.getElementById('print-stempel-lunas');
+            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
+            
+            if (isForceLunas) {
+                stempelElm.classList.remove('hidden');
+                metodeLunasContainer.classList.remove('hidden');
+                document.getElementById('print-metode-lunas').innerText = window._lastPelunasanMetode || item[6] || 'Cash';
+            } else {
+                stempelElm.classList.add('hidden');
+                metodeLunasContainer.classList.add('hidden');
+            }
+
             const oldTitle = document.title;
             const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
             const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
@@ -1128,6 +1155,11 @@
             document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
             document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
             document.getElementById('print-sisa').innerText = fmt(sisaVal);
+
+            // Set Metode Pembayaran untuk cetak langsung saat input
+            document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+            document.getElementById('print-stempel-lunas').classList.add('hidden');
+            document.getElementById('print-metode-lunas-container').classList.add('hidden');
 
             const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");
             const cDate = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");

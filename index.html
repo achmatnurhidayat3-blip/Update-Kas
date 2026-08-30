@@ -321,6 +321,7 @@
                     </table>
                 </div>
             </div>
+
             <div id="container-tabel-peralihan" class="riwayat-table-view space-y-3">
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-exchange-alt text-amber-500"></i> Riwayat Peralihan Dana (Mutasi Internal)</h3>
                 <div class="bg-white rounded-3xl border overflow-x-auto shadow-sm w-full min-w-full">
@@ -424,47 +425,45 @@
         </div>
     </div>
 
-<!-- BAGIAN CETAK NOTA (PRINT AREA REVISI) -->
-<div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
-    <div class="flex items-stretch border border-sky-200 rounded-xl overflow-hidden mb-4">
-        <div class="flex items-center gap-4 p-4 flex-1">
-            <img id="print-logo-img" src="" alt="Logo" class="w-16 h-16 object-contain">
-            <div class="text-left">
-                <h1 class="text-2xl font-black text-slate-800 tracking-wider leading-none mb-1">ASHEEQA PRINTING</h1>
-                <p class="text-xs font-bold text-sky-600 tracking-wide">Percetakan & Desain Undangan</p>
-                <p class="text-[10px] text-slate-500 font-medium mt-0.5">Jl. Borong Raya 2 | WhatsApp: 089699910769</p>
+    <!-- PRINT AREA -->
+    <div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
+        <div class="flex items-stretch border border-sky-200 rounded-xl overflow-hidden mb-4">
+            <div class="flex items-center gap-4 p-4 flex-1">
+                <img id="print-logo-img" src="" alt="Logo" class="w-16 h-16 object-contain">
+                <div class="text-left">
+                    <h1 class="text-2xl font-black text-slate-800 tracking-wider leading-none mb-1">ASHEEQA PRINTING</h1>
+                    <p class="text-xs font-bold text-sky-600 tracking-wide">Percetakan & Desain Undangan</p>
+                    <p class="text-[10px] text-slate-500 font-medium mt-0.5">Jl. Borong Raya 2 | WhatsApp: 089699910769</p>
+                </div>
+            </div>
+            <div class="border-l border-sky-200 w-48 flex items-center justify-center bg-slate-50/10">
+                <h1 class="text-2xl font-black text-slate-400 tracking-widest uppercase">NOTA</h1>
             </div>
         </div>
-        <div class="border-l border-sky-200 w-48 flex items-center justify-center bg-slate-50/10">
-            <h1 class="text-2xl font-black text-slate-400 tracking-widest uppercase">NOTA</h1>
-        </div>
-    </div>
 
-    <!-- METODE PEMBAYARAN DITAMPAKAN MENARIK DI BAGIAN ATAS / TANGGAL NOTA -->
-    <div class="border border-sky-200 rounded-2xl px-6 py-3 flex flex-col md:flex-row justify-between items-start md:items-center text-xs text-slate-800 mb-6 gap-2 bg-slate-50/30">
-        <div class="flex flex-col gap-1">
-            <div class="flex gap-2">
-                <span class="font-bold text-slate-500">Kepada Yth:</span>
-                <span id="print-cust" class="font-bold text-slate-900">-</span>
+        <div class="border border-sky-200 rounded-2xl px-6 py-3 flex flex-col md:flex-row justify-between items-start md:items-center text-xs text-slate-800 mb-6 gap-2 bg-slate-50/30">
+            <div class="flex flex-col gap-1">
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-500">Kepada Yth:</span>
+                    <span id="print-cust" class="font-bold text-slate-900">-</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-500">Tanggal:</span>
+                    <span id="print-tgl" class="font-semibold text-slate-700">-</span>
+                </div>
             </div>
-            <div class="flex gap-2">
-                <span class="font-bold text-slate-500">Tanggal:</span>
-                <span id="print-tgl" class="font-semibold text-slate-700">-</span>
+            
+            <div class="flex flex-wrap gap-2 items-center">
+                <div id="print-badge-dp-container" class="flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-sky-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                    <i class="fas fa-credit-card text-sky-600"></i>
+                    <span>Metode DP: <strong id="print-badge-dp" class="uppercase text-sky-950">Cash</strong></span>
+                </div>
+                <div id="print-badge-lunas-container" class="hidden flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                    <i class="fas fa-check-circle text-emerald-600"></i>
+                    <span>Metode Pelunasan: <strong id="print-badge-lunas" class="uppercase text-emerald-950">-</strong></span>
+                </div>
             </div>
         </div>
-        
-        <!-- DESAIN BADGE METODE PEMBAYARAN DI HEADER -->
-        <div class="flex flex-wrap gap-2 items-center">
-            <div id="print-badge-dp-container" class="flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-sky-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
-                <i class="fas fa-credit-card text-sky-600"></i>
-                <span>Metode DP: <strong id="print-badge-dp" class="uppercase text-sky-950">Cash</strong></span>
-            </div>
-            <div id="print-badge-lunas-container" class="hidden flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
-                <i class="fas fa-check-circle text-emerald-600"></i>
-                <span>Metode Pelunasan: <strong id="print-badge-lunas" class="uppercase text-emerald-950">-</strong></span>
-            </div>
-        </div>
-    </div>
 
         <div class="border border-slate-200 rounded-xl overflow-hidden mb-6">
             <table class="w-full text-left text-xs border-collapse">
@@ -481,14 +480,12 @@
         </div>
 
         <div class="flex justify-between items-end">
-            <!-- STEMPEL LUNAS -->
             <div class="flex flex-col gap-3">
                 <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
                     LUNAS
                 </div>
             </div>
 
-            <!-- RINCIAN BAYAR / PELUNASAN TETAP MENAMPILKAN DP DAN SISA -->
             <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
                 <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
                     <span class="text-slate-500">Total Keseluruhan</span>
@@ -699,8 +696,6 @@
         }
 
         function filterKategoriRiwayat(kategori, element) {
-            currentKategoriTab = kategori;
-
             document.querySelectorAll('.riwayat-cat-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-950', 'text-white', 'shadow-sm', 'font-bold');
                 btn.classList.add('text-slate-500', 'font-semibold');
@@ -730,75 +725,75 @@
             renderSplitTablesMaster();
         }
 
+        /* PERBAIKAN TOMBOL EDIT & AKSI */
         function renderSplitTablesMaster() {
-    const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-    
-    const tbodyNota = document.getElementById('tbody-nota');
-    tbodyNota.innerHTML = '';
-    const listNotaReal = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
-
-    if(listNotaReal.length === 0) {
-        tbodyNota.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
-    } else {
-        listNotaReal.forEach(r => {
-            let itemDesc = r[2]; 
-            try { itemDesc = JSON.parse(r[2]); } catch(e){}
+            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             
-            // Konversi ID ke string aman agar tidak error saat dikirim ke fungsi JS
-            const safeId = String(r[0]).replace(/'/g, "\\'");
+            const tbodyNota = document.getElementById('tbody-nota');
+            tbodyNota.innerHTML = '';
+            const listNotaReal = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
 
-            let btnAwal = `<button type="button" onclick="cetakNotaStruk('${safeId}', false)" class="text-sky-500 hover:text-sky-700 p-2 hover:bg-sky-50 rounded-lg transition" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice pointer-events-none"></i></button>`;
-            let btnLunas = `<button type="button" onclick="openPelunasanModal('${safeId}')" class="text-emerald-500 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle pointer-events-none"></i></button>`;
-            let btnEdit = `<button type="button" onclick="openEditModal('${safeId}')" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition relative z-10" title="Edit Transaksi"><i class="fas fa-edit pointer-events-none"></i></button>`;
-            let btnHapus = `<button type="button" onclick="deleteNota('${safeId}')" class="text-rose-500 hover:text-rose-700 p-2 hover:bg-rose-50 rounded-lg transition" title="Hapus Data"><i class="fas fa-trash-alt pointer-events-none"></i></button>`;
+            if(listNotaReal.length === 0) {
+                tbodyNota.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
+            } else {
+                listNotaReal.forEach(r => {
+                    let itemDesc = r[2]; 
+                    try { itemDesc = JSON.parse(r[2]); } catch(e){}
+                    
+                    const safeId = String(r[0]).replace(/'/g, "\\'");
 
-            const tr = document.createElement('tr');
-            tr.className = "border-b text-xs hover:bg-slate-50";
-            tr.innerHTML = `
-                <td class="p-4 font-bold text-slate-800">${r[1]}<br><span class="text-[10px] font-medium text-slate-400">${itemDesc}</span></td>
-                <td class="p-4 font-semibold">${fmt(r[3])}</td>
-                <td class="p-4 text-rose-500 font-bold">${fmt(r[5])}</td>
-                <td class="p-4 text-center">
-                    <div class="flex justify-center items-center gap-1 text-base relative z-10">
-                        ${btnAwal}
-                        ${btnLunas}
-                        ${btnEdit}
-                        ${btnHapus}
-                    </div>
-                </td>`;
-            tbodyNota.appendChild(tr);
-        });
-    }
+                    let btnAwal = `<button type="button" onclick="cetakNotaStruk('${safeId}', false)" class="text-sky-500 hover:text-sky-700 p-2 hover:bg-sky-50 rounded-lg transition" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice pointer-events-none"></i></button>`;
+                    let btnLunas = `<button type="button" onclick="openPelunasanModal('${safeId}')" class="text-emerald-500 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle pointer-events-none"></i></button>`;
+                    let btnEdit = `<button type="button" onclick="openEditModal('${safeId}')" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition relative z-10" title="Edit Transaksi"><i class="fas fa-edit pointer-events-none"></i></button>`;
+                    let btnHapus = `<button type="button" onclick="deleteNota('${safeId}')" class="text-rose-500 hover:text-rose-700 p-2 hover:bg-rose-50 rounded-lg transition" title="Hapus Data"><i class="fas fa-trash-alt pointer-events-none"></i></button>`;
 
-    const tbodyExp = document.getElementById('tbody-pengeluaran');
-    const tbodyMutasi = document.getElementById('tbody-peralihan');
-    tbodyExp.innerHTML = ''; tbodyMutasi.innerHTML = '';
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b text-xs hover:bg-slate-50";
+                    tr.innerHTML = `
+                        <td class="p-4 font-bold text-slate-800">${r[1]}<br><span class="text-[10px] font-medium text-slate-400">${itemDesc}</span></td>
+                        <td class="p-4 font-semibold">${fmt(r[3])}</td>
+                        <td class="p-4 text-rose-500 font-bold">${fmt(r[5])}</td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center items-center gap-1 text-base relative z-10">
+                                ${btnAwal}
+                                ${btnLunas}
+                                ${btnEdit}
+                                ${btnHapus}
+                            </div>
+                        </td>`;
+                    tbodyNota.appendChild(tr);
+                });
+            }
 
-    const listPureExp = localExpList.filter(r => !r[1].toString().startsWith("Peralihan ke") && !r[1].toString().startsWith("Mutasi keluar"));
-    const listMutasiOnly = localExpList.filter(r => r[1].toString().startsWith("Peralihan ke") || r[1].toString().startsWith("Mutasi keluar"));
+            const tbodyExp = document.getElementById('tbody-pengeluaran');
+            const tbodyMutasi = document.getElementById('tbody-peralihan');
+            tbodyExp.innerHTML = ''; tbodyMutasi.innerHTML = '';
 
-    if(listPureExp.length === 0) {
-        tbodyExp.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
-    } else {
-        listPureExp.forEach(r => {
-            const safeExpId = String(r[4]).replace(/'/g, "\\'");
-            const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-            tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeExpId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt pointer-events-none"></i></button></td>`;
-            tbodyExp.appendChild(tr);
-        });
-    }
+            const listPureExp = localExpList.filter(r => !r[1].toString().startsWith("Peralihan ke") && !r[1].toString().startsWith("Mutasi keluar"));
+            const listMutasiOnly = localExpList.filter(r => r[1].toString().startsWith("Peralihan ke") || r[1].toString().startsWith("Mutasi keluar"));
 
-    if(listMutasiOnly.length === 0) {
-        tbodyMutasi.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
-    } else {
-        listMutasiOnly.forEach(r => {
-            const safeMutasiId = String(r[4]).replace(/'/g, "\\'");
-            const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-            tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium italic text-blue-600">${r[1]}</td><td class="p-4 font-bold text-slate-700">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeMutasiId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt pointer-events-none"></i></button></td>`;
-            tbodyMutasi.appendChild(tr);
-        });
-    }
-}
+            if(listPureExp.length === 0) {
+                tbodyExp.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
+            } else {
+                listPureExp.forEach(r => {
+                    const safeExpId = String(r[4]).replace(/'/g, "\\'");
+                    const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeExpId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt pointer-events-none"></i></button></td>`;
+                    tbodyExp.appendChild(tr);
+                });
+            }
+
+            if(listMutasiOnly.length === 0) {
+                tbodyMutasi.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
+            } else {
+                listMutasiOnly.forEach(r => {
+                    const safeMutasiId = String(r[4]).replace(/'/g, "\\'");
+                    const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium italic text-blue-600">${r[1]}</td><td class="p-4 font-bold text-slate-700">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeMutasiId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt pointer-events-none"></i></button></td>`;
+                    tbodyMutasi.appendChild(tr);
+                });
+            }
+        }
 
         function liveFilterText() {
             const txt = document.getElementById('liveSearchInput').value.toLowerCase();
@@ -900,7 +895,7 @@
         }
 
         function openPelunasanModal(id) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
+            const item = globalDataCache.riwayatNota.find(r => String(r[0]) == String(id));
             if(!item) return;
             document.getElementById('lunas-id').value = item[0];
             document.getElementById('lunas-cust-name').innerText = item[1];
@@ -941,39 +936,61 @@
             }
         }
 
+        /* PERBAIKAN TOTAL MODAL EDIT TRANSAKSI */
         function openEditModal(id) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
+            if (!globalDataCache || !globalDataCache.riwayatNota) {
+                alert("Data belum dimuat sempurna, silakan refresh halaman.");
+                return;
+            }
+
+            const item = globalDataCache.riwayatNota.find(r => String(r[0]) == String(id));
+            
+            if (!item) {
+                alert("Data nota tidak ditemukan!");
+                return;
+            }
 
             document.getElementById('edit-id').value = item[0];
-            document.getElementById('edit-nama').value = item[1];
-            document.getElementById('edit-dp').value = Number(item[4]).toLocaleString('id-ID');
+            document.getElementById('edit-nama').value = item[1] || '';
+            document.getElementById('edit-dp').value = Number(item[4] || 0).toLocaleString('id-ID');
             document.getElementById('edit-metode').value = item[6] || 'Cash';
 
             const container = document.getElementById('edit-items-container');
             container.innerHTML = '';
 
-            let rawItems = item[2];
+            let rawItems = item[2] || '';
+            
             try {
-                if(rawItems.startsWith('[')) rawItems = JSON.parse(rawItems);
+                if (typeof rawItems === 'string' && rawItems.startsWith('[')) {
+                    rawItems = JSON.parse(rawItems);
+                }
             } catch(e) {}
 
-            if(typeof rawItems === 'string' && rawItems.includes('x @')) {
+            if (Array.isArray(rawItems)) {
+                rawItems = rawItems.join(', ');
+            }
+
+            if (typeof rawItems === 'string' && rawItems.includes('x @')) {
                 const parts = rawItems.split(', ');
                 parts.forEach(p => {
                     const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
-                    if(matches) {
-                        addEditItemRow(matches[1], matches[2], matches[3].replace(/\./g, ''));
+                    if (matches) {
+                        const namaBarang = matches[1].trim();
+                        const qtyBarang = matches[2];
+                        const hargaBarang = matches[3].replace(/\./g, '');
+                        addEditItemRow(namaBarang, qtyBarang, hargaBarang);
                     } else {
                         addEditItemRow(p, 1, 0);
                     }
                 });
             } else {
-                addEditItemRow(rawItems, 1, item[3]);
+                addEditItemRow(String(rawItems), 1, item[3] || 0);
             }
 
             hitungTotalEdit();
-            document.getElementById('modal-edit').classList.remove('hidden');
+            
+            const modal = document.getElementById('modal-edit');
+            modal.classList.remove('hidden');
         }
 
         function addEditItemRow(name = '', qty = 1, price = 0) {
@@ -995,14 +1012,23 @@
         function hitungTotalEdit() {
             let total = 0;
             document.querySelectorAll('.edit-item-row').forEach(row => {
-                const qty = parseRupiah(row.querySelector('.edit-qty').value);
-                const price = parseRupiah(row.querySelector('.price').value);
+                const qtyEl = row.querySelector('.edit-qty');
+                const priceEl = row.querySelector('.edit-price');
+                
+                const qty = qtyEl ? parseRupiah(qtyEl.value) : 0;
+                const price = priceEl ? parseRupiah(priceEl.value) : 0;
+                
                 const sub = qty * price;
                 total += sub;
-                row.querySelector('.edit-subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
+                
+                const subText = row.querySelector('.edit-subtotal-text');
+                if (subText) {
+                    subText.innerText = "Rp " + sub.toLocaleString('id-ID');
+                }
             });
 
-            const dp = parseRupiah(document.getElementById('edit-dp').value);
+            const dpEl = document.getElementById('edit-dp');
+            const dp = dpEl ? parseRupiah(dpEl.value) : 0;
             const sisa = Math.max(0, total - dp);
 
             document.getElementById('edit-grandTotal-text').innerText = "Rp " + total.toLocaleString('id-ID');
@@ -1105,15 +1131,13 @@
             }
         }
     
-        /* REVISI FUNGSI CETAK NOTA */
         function cetakNotaStruk(id, isForceLunas) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
+            const item = globalDataCache.riwayatNota.find(r => String(r[0]) == String(id));
             if(!item) return;
             
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             const totalBayar = Number(item[3] || 0);
             
-            // Nominal DP asli dan sisa pelunasan
             let dpBayar = Number(item[4] || 0);
             let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
             
@@ -1134,14 +1158,12 @@
             const badgeDPContainer = document.getElementById('print-badge-dp-container');
             const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
 
-            // Tetap tampilkan baris DP dan Sisa Pelunasan
             dpRow.style.display = 'flex';
             sisaRow.style.display = 'flex';
             document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
             document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
             document.getElementById('print-sisa').innerText = fmt(sisaHutang);
 
-            // Update info badge metode bayar di header (Atas dekat tanggal)
             document.getElementById('print-badge-dp').innerText = item[6] || 'Cash';
 
             if (isLunasMurni) {

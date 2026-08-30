@@ -112,9 +112,9 @@
 
         <div id="input" class="page-section p-10">
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-                        <h2 class="text-2xl font-bold text-slate-800">Input Transaksi</h2>
-                        <div class="bg-slate-100 p-1 rounded-xl flex flex-wrap gap-1 max-w-full">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800">Input Transaksi</h2>
+                    <div class="bg-slate-100 p-1 rounded-xl flex flex-wrap gap-1 max-w-full">
                         <button onclick="showInput('pemesanan', this)" class="form-tab-btn px-5 py-2.5 rounded-lg font-semibold text-sm bg-emerald-500 text-white shadow-sm">Pemesanan</button>
                         <button onclick="showInput('pengeluaran', this)" class="form-tab-btn px-5 py-2.5 rounded-lg font-semibold text-sm text-slate-500">Pengeluaran</button>
                         <button onclick="showInput('peralihan', this)" class="form-tab-btn px-5 py-2.5 rounded-lg font-semibold text-sm text-slate-500">Mutasi</button>
@@ -270,8 +270,8 @@
                 <h2 class="text-2xl font-bold text-slate-800">Riwayat Buku Keuangan</h2>
             </div>
             
-                <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 lg:p-5 rounded-3xl border border-slate-100 shadow-sm">
-                    <div class="flex flex-wrap p-1 bg-slate-100 rounded-xl gap-1 w-full lg:w-auto">
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 lg:p-5 rounded-3xl border border-slate-100 shadow-sm">
+                <div class="flex flex-wrap p-1 bg-slate-100 rounded-xl gap-1 w-full lg:w-auto">
                     <button onclick="filterKategoriRiwayat('all', this)" class="riwayat-cat-btn px-4 py-2 rounded-lg font-bold text-sm bg-slate-950 text-white shadow-sm">Semua data</button>
                     <button onclick="filterKategoriRiwayat('nota', this)" class="riwayat-cat-btn px-4 py-2 rounded-lg font-semibold text-sm text-slate-500">Pemesanan (Nota)</button>
                     <button onclick="filterKategoriRiwayat('pengeluaran', this)" class="riwayat-cat-btn px-4 py-2 rounded-lg font-semibold text-sm text-slate-500">Pengeluaran</button>
@@ -336,7 +336,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT NOTA (DIUBAH JADI FORM INTERAKTIF) -->
+    <!-- MODAL EDIT NOTA -->
     <div id="modal-edit" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3">
@@ -352,9 +352,7 @@
                 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Daftar Barang</label>
-                    <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1">
-                        <!-- Baris barang dinamis untuk edit -->
-                    </div>
+                    <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1"></div>
                     <button type="button" onclick="addEditItemRow()" class="text-emerald-600 font-semibold text-xs hover:underline mt-2 inline-block">+ Tambah Barang</button>
                 </div>
 
@@ -375,7 +373,7 @@
                         <input type="text" id="edit-dp" placeholder="DP / Bayar" required oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran Saat Pelunasan</label>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran DP</label>
                         <select id="edit-metode" class="w-full p-3 border rounded-xl bg-white text-sm">
                             <option value="Cash">Cash / Tunai</option>
                             <option value="BRI">Transfer BRI</option>
@@ -392,7 +390,7 @@
         </div>
     </div>
 
-    <!-- MODAL PELUNASAN DENGAN PILIHAN METODE BAYAR -->
+    <!-- MODAL PELUNASAN -->
     <div id="modal-pelunasan" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -426,6 +424,7 @@
         </div>
     </div>
 
+<!-- BAGIAN CETAK NOTA (PRINT AREA REVISI) -->
 <div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
     <div class="flex items-stretch border border-sky-200 rounded-xl overflow-hidden mb-4">
         <div class="flex items-center gap-4 p-4 flex-1">
@@ -441,14 +440,29 @@
         </div>
     </div>
 
-    <div class="border border-sky-200 rounded-full px-6 py-3 flex justify-between items-center text-xs font-bold text-slate-800 mb-8">
-        <div class="flex gap-2">
-            <span>Kepada Yth:</span>
-            <span id="print-cust" class="font-semibold text-slate-600">-</span>
+    <!-- METODE PEMBAYARAN DITAMPAKAN MENARIK DI BAGIAN ATAS / TANGGAL NOTA -->
+    <div class="border border-sky-200 rounded-2xl px-6 py-3 flex flex-col md:flex-row justify-between items-start md:items-center text-xs text-slate-800 mb-6 gap-2 bg-slate-50/30">
+        <div class="flex flex-col gap-1">
+            <div class="flex gap-2">
+                <span class="font-bold text-slate-500">Kepada Yth:</span>
+                <span id="print-cust" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex gap-2">
+                <span class="font-bold text-slate-500">Tanggal:</span>
+                <span id="print-tgl" class="font-semibold text-slate-700">-</span>
+            </div>
         </div>
-        <div class="flex gap-2">
-            <span>Tanggal:</span>
-            <span id="print-tgl" class="font-semibold text-slate-600">-</span>
+        
+        <!-- DESAIN BADGE METODE PEMBAYARAN DI HEADER -->
+        <div class="flex flex-wrap gap-2 items-center">
+            <div id="print-badge-dp-container" class="flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-sky-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                <i class="fas fa-credit-card text-sky-600"></i>
+                <span>Metode DP: <strong id="print-badge-dp" class="uppercase text-sky-950">Cash</strong></span>
+            </div>
+            <div id="print-badge-lunas-container" class="hidden flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                <i class="fas fa-check-circle text-emerald-600"></i>
+                <span>Metode Pelunasan: <strong id="print-badge-lunas" class="uppercase text-emerald-950">-</strong></span>
+            </div>
         </div>
     </div>
 
@@ -462,23 +476,19 @@
                         <th class="p-3 text-right w-32">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                    </tbody>
+                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
             </table>
         </div>
 
         <div class="flex justify-between items-end">
-            <!-- STEMPEL LUNAS & INFO METODE PEMBAYARAN -->
+            <!-- STEMPEL LUNAS -->
             <div class="flex flex-col gap-3">
                 <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
                     LUNAS
                 </div>
-                <div class="text-xs font-semibold text-slate-600 space-y-1">
-                    <p id="print-metode-container">Metode Pembayaran: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
-                    <p id="print-metode-lunas-container" class="hidden">Metode Bayar Pelunasan: <span id="print-metode-lunas" class="font-bold text-slate-800">-</span></p>
-                </div>
             </div>
 
+            <!-- RINCIAN BAYAR / PELUNASAN TETAP MENAMPILKAN DP DAN SISA -->
             <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
                 <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
                     <span class="text-slate-500">Total Keseluruhan</span>
@@ -980,7 +990,7 @@
             let total = 0;
             document.querySelectorAll('.edit-item-row').forEach(row => {
                 const qty = parseRupiah(row.querySelector('.edit-qty').value);
-                const price = parseRupiah(row.querySelector('.edit-price').value);
+                const price = parseRupiah(row.querySelector('.price').value);
                 const sub = qty * price;
                 total += sub;
                 row.querySelector('.edit-subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
@@ -1089,6 +1099,7 @@
             }
         }
     
+        /* REVISI FUNGSI CETAK NOTA */
         function cetakNotaStruk(id, isForceLunas) {
             const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
             if(!item) return;
@@ -1096,10 +1107,10 @@
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             const totalBayar = Number(item[3] || 0);
             
-            let dpBayar = isForceLunas ? totalBayar : Number(item[4] || 0);
+            // Nominal DP asli dan sisa pelunasan
+            let dpBayar = Number(item[4] || 0);
             let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
             
-            // Cek apakah murni lunas (sisa piutang 0 atau dipaksa lunas)
             const isLunasMurni = (sisaHutang === 0 || isForceLunas);
 
             document.getElementById('print-cust').innerText = item[1];
@@ -1113,27 +1124,27 @@
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            const metodeContainer = document.getElementById('print-metode-container');
-            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
+            
+            const badgeDPContainer = document.getElementById('print-badge-dp-container');
+            const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
+
+            // Tetap tampilkan baris DP dan Sisa Pelunasan
+            dpRow.style.display = 'flex';
+            sisaRow.style.display = 'flex';
+            document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+            document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+            document.getElementById('print-sisa').innerText = fmt(sisaHutang);
+
+            // Update info badge metode bayar di header (Atas dekat tanggal)
+            document.getElementById('print-badge-dp').innerText = item[6] || 'Cash';
 
             if (isLunasMurni) {
-                // Sembunyikan baris DP dan Sisa Piutang jika langsung lunas
-                dpRow.style.display = 'none';
-                sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = isForceLunas ? (window._lastPelunasanMetode || item[6] || 'Cash') : (item[6] || 'Cash');
+                badgeLunasContainer.classList.remove('hidden');
+                document.getElementById('print-badge-lunas').innerText = window._lastPelunasanMetode || item[6] || 'Cash';
             } else {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
-                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-                document.getElementById('print-sisa').innerText = fmt(sisaHutang);
                 stempelElm.classList.add('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
+                badgeLunasContainer.classList.add('hidden');
             }
 
             const oldTitle = document.title;
@@ -1186,26 +1197,26 @@
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            const metodeContainer = document.getElementById('print-metode-container');
-            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
+            
+            const badgeDPContainer = document.getElementById('print-badge-dp-container');
+            const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
+
+            dpRow.style.display = 'flex';
+            sisaRow.style.display = 'flex';
+            document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
+            document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+            document.getElementById('print-sisa').innerText = fmt(sisaVal);
+
+            const metodeInput = document.getElementById('sumberDana').value;
+            document.getElementById('print-badge-dp').innerText = metodeInput;
 
             if (isLunasMurni) {
-                dpRow.style.display = 'none';
-                sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+                badgeLunasContainer.classList.remove('hidden');
+                document.getElementById('print-badge-lunas').innerText = metodeInput;
             } else {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
-                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-                document.getElementById('print-sisa').innerText = fmt(sisaVal);
                 stempelElm.classList.add('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+                badgeLunasContainer.classList.add('hidden');
             }
 
             const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");

@@ -336,7 +336,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT NOTA -->
+    <!-- MODAL EDIT NOTA (DIUBAH JADI FORM INTERAKTIF) -->
     <div id="modal-edit" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3">
@@ -352,7 +352,9 @@
                 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Daftar Barang</label>
-                    <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1"></div>
+                    <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1">
+                        <!-- Baris barang dinamis untuk edit -->
+                    </div>
                     <button type="button" onclick="addEditItemRow()" class="text-emerald-600 font-semibold text-xs hover:underline mt-2 inline-block">+ Tambah Barang</button>
                 </div>
 
@@ -390,7 +392,7 @@
         </div>
     </div>
 
-    <!-- MODAL PELUNASAN -->
+    <!-- MODAL PELUNASAN DENGAN PILIHAN METODE BAYAR -->
     <div id="modal-pelunasan" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -424,7 +426,7 @@
         </div>
     </div>
 
-    <div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
+<div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
     <div class="flex items-stretch border border-sky-200 rounded-xl overflow-hidden mb-4">
         <div class="flex items-center gap-4 p-4 flex-1">
             <img id="print-logo-img" src="" alt="Logo" class="w-16 h-16 object-contain">
@@ -439,106 +441,17 @@
         </div>
     </div>
 
-    <div class="border border-sky-200 rounded-2xl p-4 flex flex-wrap justify-between items-center text-xs text-slate-800 mb-6 bg-slate-50/50 gap-4">
-        <div class="space-y-1">
-            <div class="flex gap-2 items-center">
-                <span class="text-slate-400 font-semibold uppercase text-[10px] tracking-wider w-20">Kepada Yth</span>
-                <span class="text-slate-300">:</span>
-                <span id="print-cust" class="font-bold text-slate-800 text-sm">-</span>
-            </div>
-            <div class="flex gap-2 items-center">
-                <span class="text-slate-400 font-semibold uppercase text-[10px] tracking-wider w-20">Tanggal</span>
-                <span class="text-slate-300">:</span>
-                <span id="print-tgl" class="font-semibold text-slate-700">-</span>
-            </div>
+    <div class="border border-sky-200 rounded-full px-6 py-3 flex justify-between items-center text-xs font-bold text-slate-800 mb-8">
+        <div class="flex gap-2">
+            <span>Kepada Yth:</span>
+            <span id="print-cust" class="font-semibold text-slate-600">-</span>
         </div>
-
-        <div class="flex flex-col items-end gap-1.5">
-            <div id="print-metode-container" class="flex items-center gap-2">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Metode DP:</span>
-                <span id="print-metode-dp" class="bg-blue-100 text-blue-700 border border-blue-200 px-3 py-1 rounded-full font-bold text-xs uppercase shadow-sm">
-                    -
-                </span>
-            </div>
-            <div id="print-metode-lunas-container" class="hidden flex items-center gap-2">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pelunasan:</span>
-                <span id="print-metode-lunas" class="bg-emerald-100 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-bold text-xs uppercase shadow-sm">
-                    -
-                </span>
-            </div>
+        <div class="flex gap-2">
+            <span>Tanggal:</span>
+            <span id="print-tgl" class="font-semibold text-slate-600">-</span>
         </div>
     </div>
 
-    <div class="border border-slate-200 rounded-xl overflow-hidden mb-6">
-        <table class="w-full text-left text-xs border-collapse">
-            <thead>
-                <tr class="bg-blue-600 text-white border-b border-blue-700 font-bold uppercase tracking-wider">
-                    <th class="p-3 text-left">Nama Barang</th>
-                    <th class="p-3 text-right">Harga Satuan</th>
-                    <th class="p-3 text-center w-20">Qty</th>
-                    <th class="p-3 text-right w-32">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
-            </tbody>
-        </table>
-    </div>
-
-    <div class="flex justify-between items-end">
-        <div class="flex flex-col gap-3">
-            <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
-                LUNAS
-            </div>
-        </div>
-        
-        <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
-            <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
-                <span class="text-slate-500">Total Keseluruhan</span>
-                <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
-            </div>
-            <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
-                <span id="print-dp-label">Uang Muka / DP</span>
-                <span id="print-dp" class="font-bold text-right">- Rp 0</span>
-            </div>
-            <div class="flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black" id="print-sisa-row">
-                <span id="print-sisa-label">Sisa Pelunasan</span>
-                <span id="print-sisa" class="text-right">Rp 0</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="text-center mt-6 pt-4 border-t border-dashed border-slate-300 text-xs font-bold text-slate-500 italic">
-        "Terima kasih telah mempercayakan cetakan Anda kepada kami."
-    </div>
-</div>
-
-        <!-- DETIL PEMESANAN & DESAIN METODE PEMBAYARAN DI HEADER -->
-        <div class="border border-sky-200 rounded-xl p-4 mb-6 bg-slate-50/30">
-            <div class="flex justify-between items-center text-xs font-bold text-slate-800 border-b border-sky-100 pb-3 mb-3">
-                <div class="flex gap-2">
-                    <span class="text-slate-400">Kepada Yth:</span>
-                    <span id="print-cust" class="font-bold text-slate-900 text-sm">-</span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-slate-400">Tanggal Order:</span>
-                    <span id="print-tgl" class="font-bold text-slate-900">-</span>
-                </div>
-            </div>
-            
-            <!-- METODE PEMBAYARAN BARU DI BAWAH TANGGAL (LEBIH MENARIK) -->
-            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div class="flex items-center gap-2">
-                    <span class="text-slate-500 font-semibold text-[11px]"><i class="fas fa-credit-card text-sky-500 mr-1"></i> Met. Bayar DP:</span>
-                    <span id="print-header-metode-dp" class="bg-white px-3 py-1 rounded-lg border border-sky-200 font-bold text-slate-800 shadow-sm">Cash</span>
-                </div>
-                <div id="print-header-metode-lunas-box" class="flex items-center gap-2">
-                    <span class="text-slate-500 font-semibold text-[11px]"><i class="fas fa-check-circle text-emerald-500 mr-1"></i> Met. Bayar Pelunasan:</span>
-                    <span id="print-header-metode-lunas" class="bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200 font-bold text-emerald-800 shadow-sm">-</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABEL ITEM PRINT -->
         <div class="border border-slate-200 rounded-xl overflow-hidden mb-6">
             <table class="w-full text-left text-xs border-collapse">
                 <thead>
@@ -549,15 +462,20 @@
                         <th class="p-3 text-right w-32">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
+                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                    </tbody>
             </table>
         </div>
 
-        <!-- FOOTER SUMMARY & STEMPEL LUNAS -->
         <div class="flex justify-between items-end">
+            <!-- STEMPEL LUNAS & INFO METODE PEMBAYARAN -->
             <div class="flex flex-col gap-3">
                 <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
                     LUNAS
+                </div>
+                <div class="text-xs font-semibold text-slate-600 space-y-1">
+                    <p id="print-metode-container">Metode Pembayaran: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
+                    <p id="print-metode-lunas-container" class="hidden">Metode Bayar Pelunasan: <span id="print-metode-lunas" class="font-bold text-slate-800">-</span></p>
                 </div>
             </div>
 
@@ -1062,7 +980,7 @@
             let total = 0;
             document.querySelectorAll('.edit-item-row').forEach(row => {
                 const qty = parseRupiah(row.querySelector('.edit-qty').value);
-                const price = parseRupiah(row.querySelector('.price').value);
+                const price = parseRupiah(row.querySelector('.edit-price').value);
                 const sub = qty * price;
                 total += sub;
                 row.querySelector('.edit-subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
@@ -1171,63 +1089,63 @@
             }
         }
     
-       function cetakNota(item) {
-    document.getElementById('print-cust').innerText = item.nama;
-    document.getElementById('print-tgl').innerText = item.tanggal;
+        function cetakNotaStruk(id, isForceLunas) {
+            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
+            if(!item) return;
+            
+            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+            const totalBayar = Number(item[3] || 0);
+            
+            let dpBayar = isForceLunas ? totalBayar : Number(item[4] || 0);
+            let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
+            
+            // Cek apakah murni lunas (sisa piutang 0 atau dipaksa lunas)
+            const isLunasMurni = (sisaHutang === 0 || isForceLunas);
 
-    // Set Metode Pembayaran DP
-    document.getElementById('print-metode-dp').innerText = item.metode || 'Cash';
-    
-    // Set Metode Pembayaran Pelunasan jika ada
-    const containerLunas = document.getElementById('print-metode-lunas-container');
-    if (item.metodeLunas) {
-        document.getElementById('print-metode-lunas').innerText = item.metodeLunas;
-        containerLunas.classList.remove('hidden');
-    } else {
-        containerLunas.classList.add('hidden');
-    }
+            document.getElementById('print-cust').innerText = item[1];
+            const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+            document.getElementById('print-tgl').innerText = tglFormatted;
+            
+            parseItemsToPrintRows(item[2], totalBayar);
+            
+            document.getElementById('print-total').innerText = fmt(totalBayar);
+            
+            const dpRow = document.getElementById('print-dp-row');
+            const sisaRow = document.getElementById('print-sisa-row');
+            const stempelElm = document.getElementById('print-stempel-lunas');
+            const metodeContainer = document.getElementById('print-metode-container');
+            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
 
-    const tbody = document.getElementById('print-items-tbody');
-    tbody.innerHTML = '';
-    
-    item.items.forEach(it => {
-        const tr = document.createElement('tr');
-        tr.className = 'border-b border-slate-100';
-        tr.innerHTML = `
-            <td class="p-3 font-semibold text-slate-800">${it.nama}</td>
-            <td class="p-3 text-right">Rp ${it.harga.toLocaleString('id-ID')}</td>
-            <td class="p-3 text-center">${it.qty}</td>
-            <td class="p-3 text-right font-bold text-slate-900">Rp ${(it.harga * it.qty).toLocaleString('id-ID')}</td>
-        `;
-        tbody.appendChild(tr);
-    });
+            if (isLunasMurni) {
+                // Sembunyikan baris DP dan Sisa Piutang jika langsung lunas
+                dpRow.style.display = 'none';
+                sisaRow.style.display = 'none';
+                stempelElm.classList.remove('hidden');
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = isForceLunas ? (window._lastPelunasanMetode || item[6] || 'Cash') : (item[6] || 'Cash');
+            } else {
+                dpRow.style.display = 'flex';
+                sisaRow.style.display = 'flex';
+                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+                document.getElementById('print-sisa').innerText = fmt(sisaHutang);
+                stempelElm.classList.add('hidden');
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
+            }
 
-    // Perhitungan Total, DP, dan Sisa Pelunasan
-    const grandTotal = item.grandTotal;
-    const dp = item.dp;
-    const sisa = grandTotal - dp;
+            const oldTitle = document.title;
+            const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
+            const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
+            document.title = `${cleanCustName}_${cleanDate}`;
+            
+            window.print();
+            
+            setTimeout(() => { document.title = oldTitle; }, 1000);
+        }
 
-    document.getElementById('print-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
-    document.getElementById('print-dp').innerText = '- Rp ' + dp.toLocaleString('id-ID');
-    document.getElementById('print-sisa').innerText = 'Rp ' + (sisa > 0 ? sisa.toLocaleString('id-ID') : 0);
-
-    const stempel = document.getElementById('print-stempel-lunas');
-    const sisaRow = document.getElementById('print-sisa-row');
-    const sisaLabel = document.getElementById('print-sisa-label');
-
-    if (sisa <= 0) {
-        stempel.classList.remove('hidden');
-        sisaLabel.innerText = "Status Pelunasan";
-        document.getElementById('print-sisa').innerText = "LUNAS";
-        sisaRow.className = "flex justify-between items-center border-t border-slate-200 p-3 text-emerald-600 bg-emerald-100/40 text-sm font-black";
-    } else {
-        stempel.classList.add('hidden');
-        sisaLabel.innerText = "Sisa Pelunasan";
-        sisaRow.className = "flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black";
-    }
-
-    window.print();
-}
         function simpanDanCetak() {
             const custName = document.getElementById('custName').value;
             if(!custName) return alert("Masukkan nama pelanggan untuk cetak nota!");
@@ -1262,23 +1180,22 @@
 
             document.getElementById('print-cust').innerText = custName;
             document.getElementById('print-tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-            document.getElementById('print-total').innerText = fmt(total);
 
+            document.getElementById('print-total').innerText = fmt(total);
+            
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            const metLunasBox = document.getElementById('print-header-metode-lunas-box');
-
-            document.getElementById('print-header-metode-dp').innerText = document.getElementById('sumberDana').value;
+            const metodeContainer = document.getElementById('print-metode-container');
+            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
 
             if (isLunasMurni) {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
-                document.getElementById('print-dp-label').innerText = "Pembayaran (Lunas)";
-                document.getElementById('print-sisa').innerText = "Rp 0";
+                dpRow.style.display = 'none';
+                sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                metLunasBox.style.display = 'none';
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
             } else {
                 dpRow.style.display = 'flex';
                 sisaRow.style.display = 'flex';
@@ -1286,7 +1203,9 @@
                 document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
                 document.getElementById('print-sisa').innerText = fmt(sisaVal);
                 stempelElm.classList.add('hidden');
-                metLunasBox.style.display = 'none';
+                metodeContainer.style.display = 'block';
+                metodeLunasContainer.classList.add('hidden');
+                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
             }
 
             const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");

@@ -336,7 +336,6 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT NOTA (DIUBAH JADI FORM INTERAKTIF) -->
     <div id="modal-edit" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3">
@@ -353,8 +352,7 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Daftar Barang</label>
                     <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1">
-                        <!-- Baris barang dinamis untuk edit -->
-                    </div>
+                        </div>
                     <button type="button" onclick="addEditItemRow()" class="text-emerald-600 font-semibold text-xs hover:underline mt-2 inline-block">+ Tambah Barang</button>
                 </div>
 
@@ -392,7 +390,6 @@
         </div>
     </div>
 
-    <!-- MODAL PELUNASAN DENGAN PILIHAN METODE BAYAR -->
     <div id="modal-pelunasan" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -441,64 +438,66 @@
         </div>
     </div>
 
-    <div class="border border-sky-200 rounded-full px-6 py-3 flex justify-between items-center text-xs font-bold text-slate-800 mb-8">
-        <div class="flex gap-2">
-            <span>Kepada Yth:</span>
-            <span id="print-cust" class="font-semibold text-slate-600">-</span>
+    <div class="border border-sky-200 rounded-2xl p-4 mb-6 bg-sky-50/30 flex flex-wrap justify-between items-center gap-4 text-xs font-bold text-slate-800">
+        <div class="flex items-center gap-2">
+            <span class="text-slate-500 font-semibold">Kepada Yth:</span>
+            <span id="print-cust" class="font-bold text-slate-800 text-sm bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm">-</span>
         </div>
-        <div class="flex gap-2">
-            <span>Tanggal:</span>
-            <span id="print-tgl" class="font-semibold text-slate-600">-</span>
-        </div>
-    </div>
-
-        <div class="border border-slate-200 rounded-xl overflow-hidden mb-6">
-            <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                    <tr class="bg-blue-600 text-white border-b border-blue-700 font-bold uppercase tracking-wider">
-                        <th class="p-3 text-left">Nama Barang</th>
-                        <th class="p-3 text-right">Harga Satuan</th>
-                        <th class="p-3 text-center w-20">Qty</th>
-                        <th class="p-3 text-right w-32">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                    </tbody>
-            </table>
-        </div>
-
-        <div class="flex justify-between items-end">
-            <!-- STEMPEL LUNAS & INFO METODE PEMBAYARAN -->
-            <div class="flex flex-col gap-3">
-                <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
-                    LUNAS
-                </div>
-                <div class="text-xs font-semibold text-slate-600 space-y-1">
-                    <p id="print-metode-container">Metode Pembayaran: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
-                    <p id="print-metode-lunas-container" class="hidden">Metode Bayar Pelunasan: <span id="print-metode-lunas" class="font-bold text-slate-800">-</span></p>
-                </div>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span class="text-slate-500 font-semibold">Tanggal:</span>
+                <span id="print-tgl" class="font-bold text-slate-800 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm">-</span>
             </div>
-
-            <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
-                <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
-                    <span class="text-slate-500">Total Keseluruhan</span>
-                    <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
-                </div>
-                <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
-                    <span id="print-dp-label">Uang Muka / DP</span>
-                    <span id="print-dp" class="font-bold text-right">- Rp 0</span>
-                </div>
-                <div class="flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black" id="print-sisa-row">
-                    <span>Sisa Pelunasan</span>
-                    <span id="print-sisa" class="text-right">Rp 0</span>
+            <div id="print-metode-badge" class="flex items-center gap-2 border-l border-sky-200 pl-4">
+                <span class="text-slate-500 font-semibold">Metode:</span>
+                <div class="flex flex-col gap-1">
+                    <span id="print-metode-dp" class="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-lg shadow-sm tracking-wide">CASH</span>
+                    <span id="print-metode-lunas" class="hidden bg-blue-600 text-white text-[11px] font-bold px-3 py-1 rounded-lg shadow-sm tracking-wide">LUNAS: -</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="text-center mt-6 pt-4 border-t border-dashed border-slate-300 text-xs font-bold text-slate-500 italic">
-            "Terima kasih telah mempercayakan cetakan Anda kepada kami."
+    <div class="border border-slate-200 rounded-xl overflow-hidden mb-6">
+        <table class="w-full text-left text-xs border-collapse">
+            <thead>
+                <tr class="bg-blue-600 text-white border-b border-blue-700 font-bold uppercase tracking-wider">
+                    <th class="p-3 text-left">Nama Barang</th>
+                    <th class="p-3 text-right">Harga Satuan</th>
+                    <th class="p-3 text-center w-20">Qty</th>
+                    <th class="p-3 text-right w-32">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex justify-between items-center relative min-h-[120px]">
+        <div id="print-stempel-lunas" class="hidden border-4 border-red-600 text-red-600 font-black text-3xl tracking-widest px-8 py-3 rounded-2xl uppercase transform -rotate-12 inline-block text-center shadow-sm border-dashed">
+            LUNAS
+        </div>
+        
+        <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold ml-auto">
+            <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
+                <span class="text-slate-500">Total Keseluruhan</span>
+                <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
+            </div>
+            <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
+                <span id="print-dp-label">Uang Muka / DP</span>
+                <span id="print-dp" class="font-bold text-right">- Rp 0</span>
+            </div>
+            <div class="flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black" id="print-sisa-row">
+                <span>Sisa Pelunasan</span>
+                <span id="print-sisa" class="text-right">Rp 0</span>
+            </div>
         </div>
     </div>
+
+    <div class="text-center mt-6 pt-4 border-t border-dashed border-slate-300 text-xs font-bold text-slate-500 italic">
+        "Terima kasih telah mempercayakan cetakan Anda kepada kami."
+    </div>
+</div>
 
     <script>
         let globalDataCache = { riwayatNota: [], riwayatExp: [] };
@@ -512,9 +511,11 @@
                 elm.value = Number(val).toLocaleString('id-ID');
             }
         }
+
         function parseRupiah(val) {
             return Number(val.toString().replace(/[^0-9]/g, '')) || 0;
         }
+
         function markManualDP() {
             isManualDP = true;
         }
@@ -542,15 +543,22 @@
             const cbBulan = document.getElementById('searchBulan');
             const cbTahun = document.getElementById('searchTahun');
             const now = new Date();
-
-            cbBulan.innerHTML = ''; cbTahun.innerHTML = '';
+            
+            cbBulan.innerHTML = '';
+            cbTahun.innerHTML = '';
+            
             bulanList.forEach((b, i) => {
-                const opt = document.createElement('option'); opt.value = i; opt.innerText = b;
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = b;
                 if(i === now.getMonth()) opt.selected = true;
                 cbBulan.appendChild(opt);
             });
+            
             for(let th = now.getFullYear() - 2; th <= now.getFullYear() + 2; th++) {
-                const opt = document.createElement('option'); opt.value = th; opt.innerText = th;
+                const opt = document.createElement('option');
+                opt.value = th;
+                opt.innerText = th;
                 if(th === now.getFullYear()) opt.selected = true;
                 cbTahun.appendChild(opt);
             }
@@ -563,8 +571,7 @@
             newRow.innerHTML = `
                 <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none">
                 <input type="text" placeholder="Qty" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>`;
+                <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()"><span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>`;
             container.appendChild(newRow);
         }
 
@@ -580,28 +587,29 @@
         }
 
         function hitungTotal() {
-            let total = 0;
-            document.querySelectorAll('.item-row').forEach(row => {
+            let grandTotal = 0;
+            document.querySelectorAll('#items-container .item-row').forEach(row => {
                 const qty = parseRupiah(row.querySelector('.qty').value);
                 const price = parseRupiah(row.querySelector('.price').value);
-                total += (qty * price);
-                row.querySelector('.subtotal-text').innerText = "Rp " + (qty * price).toLocaleString('id-ID');
+                const subtotal = qty * price;
+                row.querySelector('.subtotal-text').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
+                grandTotal += subtotal;
             });
             
-            const dpInputElm = document.getElementById('inputDP');
-            const persenDP = Number(document.getElementById('persenDP').value);
+            document.getElementById('grandTotal').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
             
-            if(!isManualDP && total > 0) {
-                if (persenDP === 1) {
-                    dpInputElm.value = total.toLocaleString('id-ID');
-                } else {
-                    dpInputElm.value = (total * persenDP).toLocaleString('id-ID');
-                }
+            const dpInput = document.getElementById('inputDP');
+            let dp = 0;
+            if (isManualDP) {
+                dp = parseRupiah(dpInput.value);
+            } else {
+                const pct = parseFloat(document.getElementById('persenDP').value) || 0.5;
+                dp = Math.round(grandTotal * pct);
+                dpInput.value = dp > 0 ? dp.toLocaleString('id-ID') : '';
             }
-
-            const dpInput = parseRupiah(dpInputElm.value);
-            document.getElementById('grandTotal').innerText = "Rp " + total.toLocaleString('id-ID');
-            document.getElementById('sisaTagihanText').innerText = "Rp " + Math.max(0, total - dpInput).toLocaleString('id-ID');
+            
+            const sisa = grandTotal - dp;
+            document.getElementById('sisaTagihanText').innerText = 'Rp ' + (sisa > 0 ? sisa : 0).toLocaleString('id-ID');
         }
 
         function hitungEstimasi() {
@@ -611,286 +619,363 @@
                 const price = parseRupiah(row.querySelector('.est-price').value);
                 total += (qty * price);
             });
-            const totalFinal = total; 
-
-            const persenDP = Number(document.getElementById('estPersenDP').value);
             
-            if (persenDP === 1) {
-                document.getElementById('estDPContainer').style.display = 'none';
-                document.getElementById('estSisaContainer').style.display = 'none';
-            } else {
-                document.getElementById('estDPContainer').style.display = 'block';
-                document.getElementById('estSisaContainer').style.display = 'block';
-                const dpAmount = totalFinal * persenDP;
-                const sisaAmount = totalFinal - dpAmount;
-
-                document.getElementById('estDPLabel').innerText = (persenDP * 100) + "%";
-                document.getElementById('estDP').innerText = "Rp " + dpAmount.toLocaleString('id-ID');
-                document.getElementById('estSisa').innerText = "Rp " + sisaAmount.toLocaleString('id-ID');
-            }
-
-            document.getElementById('estTotal').innerText = "Rp " + totalFinal.toLocaleString('id-ID');
-        }
-
-        async function updateDashboard() {
-            setLoading(true);
-            try {
-                const res = await fetch(`${API_URL}?action=getDashboard`);
-                const data = await res.json();
-                globalDataCache = data;
-
-                const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-
-                document.getElementById('saldoCash').innerText = fmt(data.cash);
-                document.getElementById('saldoBNI').innerText = fmt(data.bni);
-                document.getElementById('saldoBRI').innerText = fmt(data.bri);
-                document.getElementById('totalPemasukan').innerText = fmt(data.masukBulanIni);
-                document.getElementById('totalPengeluaran').innerText = fmt(data.keluarBulanIni);
-                document.getElementById('totalKeuntungan').innerText = fmt(data.labaBersih);
-                document.getElementById('totalPiutang').innerText = fmt(data.piutang);
-                
-                document.getElementById('miniMasuk').innerText = fmt(data.masukBulanIni);
-                document.getElementById('miniKeluar').innerText = fmt(data.keluarBulanIni);
-                document.getElementById('miniLaba').innerText = fmt(data.labaBersih);
-
-                localNotaList = data.riwayatNota;
-                localExpList = data.riwayatExp;
-
-                renderOrderflowTable(data.riwayatNota);
-                renderSplitTablesMaster();
-
-                setLoading(false);
-            } catch(e) { console.error("Dashboard error");
-                setLoading(false);
-            }
-        }
-
-        async function eksekusiCariBulanTahun() {
-            setLoading(true);
-            const m = document.getElementById('searchBulan').value;
-            const y = document.getElementById('searchTahun').value;
-            try {
-                const res = await fetch(`${API_URL}?action=searchByMonth&month=${m}&year=${y}`);
-                const data = await res.json();
-
-                const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-                document.getElementById('miniMasuk').innerText = fmt(data.masuk || 0);
-                document.getElementById('miniKeluar').innerText = fmt(data.keluar || 0);
-                document.getElementById('miniLaba').innerText = fmt(data.laba || 0);
-
-                localNotaList = data.nota || [];
-                localExpList = data.exp || [];
-
-                renderSplitTablesMaster();
-            } catch(e) { 
-                console.error("Gagal melakukan pencarian bulanan:", e);
-            }
-            setLoading(false);
-        }
-
-        function filterKategoriRiwayat(kategori, element) {
-            currentKategoriTab = kategori;
-
-            document.querySelectorAll('.riwayat-cat-btn').forEach(btn => {
-                btn.classList.remove('bg-slate-950', 'text-white', 'shadow-sm', 'font-bold');
-                btn.classList.add('text-slate-500', 'font-semibold');
-            });
-
-            element.classList.remove('text-slate-500', 'font-semibold');
-            element.classList.add('bg-slate-950', 'text-white', 'shadow-sm', 'font-bold');
-
-            if (kategori === "all") {
-                document.getElementById('container-tabel-nota').style.display = 'block';
-                document.getElementById('container-tabel-pengeluaran').style.display = 'block';
-                document.getElementById('container-tabel-peralihan').style.display = 'block';
-            } else if (kategori === "nota") {
-                document.getElementById('container-tabel-nota').style.display = 'block';
-                document.getElementById('container-tabel-pengeluaran').style.display = 'none';
-                document.getElementById('container-tabel-peralihan').style.display = 'none';
-            } else if (kategori === "pengeluaran") {
-                document.getElementById('container-tabel-nota').style.display = 'none';
-                document.getElementById('container-tabel-pengeluaran').style.display = 'block';
-                document.getElementById('container-tabel-peralihan').style.display = 'none';
-            } else if (kategori === "peralihan") {
-                document.getElementById('container-tabel-nota').style.display = 'none';
-                document.getElementById('container-tabel-pengeluaran').style.display = 'none';
-                document.getElementById('container-tabel-peralihan').style.display = 'block';
-            }
-
-            renderSplitTablesMaster();
-        }
-
-        function renderSplitTablesMaster() {
-            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+            const pct = parseFloat(document.getElementById('estPersenDP').value);
+            const dp = Math.round(total * pct);
+            const sisa = total - dp;
             
-            const tbodyNota = document.getElementById('tbody-nota');
-            tbodyNota.innerHTML = '';
-            const listNotaReal = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
-
-            if(listNotaReal.length === 0) {
-                tbodyNota.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
-            } else {
-                listNotaReal.forEach(r => {
-                    let itemDesc = r[2]; try { itemDesc = JSON.parse(r[2]); } catch(e){}
-                    
-                    let btnAwal = `<button onclick="cetakNotaStruk('${r[0]}', false)" class="text-sky-500 p-1 hover:bg-sky-50 rounded" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice"></i></button>`;
-                    let btnLunas = `<button onclick="openPelunasanModal('${r[0]}')" class="text-emerald-500 p-1 hover:bg-emerald-50 rounded" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle"></i></button>`;
-                    let btnEdit = `<button onclick="openEditModal('${r[0]}')" class="text-amber-500 p-1 hover:bg-amber-50 rounded" title="Edit Transaksi"><i class="fas fa-edit"></i></button>`;
-                    let btnHapus = `<button onclick="deleteNota('${r[0]}')" class="text-rose-500 p-1 hover:bg-rose-50 rounded" title="Hapus Data"><i class="fas fa-trash-alt"></i></button>`;
-
-                    const tr = document.createElement('tr');
-                    tr.className = "border-b text-xs hover:bg-slate-50";
-                    tr.innerHTML = `
-                        <td class="p-4 font-bold text-slate-800">${r[1]}<br><span class="text-[10px] font-medium text-slate-400">${itemDesc}</span></td>
-                        <td class="p-4 font-semibold">${fmt(r[3])}</td>
-                        <td class="p-4 text-rose-500 font-bold">${fmt(r[5])}</td>
-                        <td class="p-4 text-center">
-                            <div class="flex justify-center gap-1.5 text-base">
-                                ${btnAwal}
-                                ${btnLunas}
-                                ${btnEdit}
-                                ${btnHapus}
-                            </div>
-                        </td>`;
-                    tbodyNota.appendChild(tr);
-                });
-            }
-
-            const tbodyExp = document.getElementById('tbody-pengeluaran');
-            const tbodyMutasi = document.getElementById('tbody-peralihan');
-            tbodyExp.innerHTML = ''; tbodyMutasi.innerHTML = '';
-
-            const listPureExp = localExpList.filter(r => !r[1].toString().startsWith("Peralihan ke") && !r[1].toString().startsWith("Mutasi keluar"));
-            const listMutasiOnly = localExpList.filter(r => r[1].toString().startsWith("Peralihan ke") || r[1].toString().startsWith("Mutasi keluar"));
-
-            if(listPureExp.length === 0) {
-                tbodyExp.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
-            } else {
-                listPureExp.forEach(r => {
-                    const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button onclick="deletePengeluaran('${r[4]}')" class="text-rose-500 p-1"><i class="fas fa-trash-alt"></i></button></td>`;
-                    tbodyExp.appendChild(tr);
-                });
-            }
-
-            if(listMutasiOnly.length === 0) {
-                tbodyMutasi.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
-            } else {
-                listMutasiOnly.forEach(r => {
-                    const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium italic text-blue-600">${r[1]}</td><td class="p-4 font-bold text-slate-700">${fmt(r[2])}</td><td class="p-4 text-center"><button onclick="deletePengeluaran('${r[4]}')" class="text-rose-500 p-1"><i class="fas fa-trash-alt"></i></button></td>`;
-                    tbodyMutasi.appendChild(tr);
-                });
-            }
+            document.getElementById('estTotal').innerText = 'Rp ' + total.toLocaleString('id-ID');
+            document.getElementById('estDPLabel').innerText = (pct * 100) + '%';
+            document.getElementById('estDP').innerText = 'Rp ' + dp.toLocaleString('id-ID');
+            document.getElementById('estSisa').innerText = 'Rp ' + (sisa > 0 ? sisa : 0).toLocaleString('id-ID');
         }
 
-        function liveFilterText() {
-            const txt = document.getElementById('liveSearchInput').value.toLowerCase();
-            document.querySelectorAll('#tbody-nota tr, #tbody-pengeluaran tr, #tbody-peralihan tr').forEach(tr => {
-                if(tr.innerText.toLowerCase().includes(txt)) tr.style.display = '';
-                else tr.style.display = 'none';
+        function kirimWhatsAppEstimasi() {
+            const name = document.getElementById('waCustName').value || 'Pelanggan';
+            const bonus = document.getElementById('waBonusPaket').value;
+            const pct = parseFloat(document.getElementById('estPersenDP').value);
+            let text = `Halo Kak *${name}*, berikut rincian estimasi pesanan Anda di *ASHEEQA PRINTING*:\n\n`;
+            
+            document.querySelectorAll('.est-item-row').forEach((row, i) => {
+                const n = row.querySelector('.est-name').value || `Item ${i+1}`;
+                const q = parseRupiah(row.querySelector('.est-qty').value);
+                const p = parseRupiah(row.querySelector('.est-price').value);
+                if(q > 0) text += `• ${n} (${q} x Rp ${p.toLocaleString('id-ID')}) = *Rp ${(q*p).toLocaleString('id-ID')}*\n`;
             });
-        }
-
-        function renderOrderflowTable(riwayatNota) {
-            const tbody = document.getElementById('table-orderflow'); 
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            const now = new Date();
-
-            if(!riwayatNota || riwayatNota.length === 0) return;
-
-            riwayatNota.forEach(r => {
-                if (r[0] && r[0].toString().startsWith("TRF-")) return;
-                
-                const tglOrder = r[7] ? new Date(r[7]) : new Date();
-                
-                if (tglOrder.getMonth() !== now.getMonth() || tglOrder.getFullYear() !== now.getFullYear()) return;
-
-                const tglDeadline = new Date(tglOrder.getTime() + (7 * 24 * 60 * 60 * 1000));
-                const daysLeft = Math.ceil((tglDeadline - new Date()) / (1000 * 60 * 60 * 24));
-                const sisaPiutang = Number(r[5] || 0);
-
-                let statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Aman</span>';
-                let sisaTeks = `Sisa ${daysLeft} Hari`;
-
-                if (sisaPiutang === 0) {
-                    statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-50 text-blue-700 border border-blue-200">Selesai</span>';
-                    sisaTeks = "-";
-                } else if (daysLeft < 0) {
-                    statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-rose-50 text-rose-700 border border-rose-200">Overdue</span>';
-                    sisaTeks = `<span class="text-rose-600 font-bold">Lewat ${Math.abs(daysLeft)} Hari</span>`;
-                } else if (daysLeft <= 2) { 
-                    statusBadge = '<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200">Urgent</span>'; 
-                }
-
-                let itemsClean = r[2] || '-'; 
-                try { if(itemsClean.startsWith('[')) itemsClean = JSON.parse(r[2]); } catch(e) {}
-                
-                const tr = document.createElement('tr'); 
-                tr.className = "hover:bg-slate-50 border-b text-xs";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold">${r[1] || '-'}</td>
-                    <td class="p-4 max-w-xs truncate">${itemsClean}</td>
-                    <td class="p-4">${tglOrder.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</td>
-                    <td class="p-4 font-semibold text-indigo-600">${tglDeadline.toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</td>
-                    <td class="p-4">${sisaTeks}</td>
-                    <td class="p-4 text-center">${statusBadge}</td>`;
-                tbody.appendChild(tr);
-            });
+            
+            const total = parseRupiah(document.getElementById('estTotal').innerText);
+            const dp = parseRupiah(document.getElementById('estDP').innerText);
+            const sisa = parseRupiah(document.getElementById('estSisa').innerText);
+            
+            if(bonus) text += `\n🎁 *Paket Bonus:* ${bonus}\n`;
+            text += `\n*Total Estimasi:* Rp ${total.toLocaleString('id-ID')}\n`;
+            text += `*Ketentuan DP (${pct*100}%):* Rp ${dp.toLocaleString('id-ID')}\n`;
+            text += `*Sisa Pelunasan:* Rp ${sisa.toLocaleString('id-ID')}\n\n`;
+            text += `Terima kasih! Silakan konfirmasi jika ingin melanjutkan proses cetak. 🙏`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
         async function simpanData() {
-            const custName = document.getElementById('custName').value;
-            if(!custName) return alert("Nama pelanggan wajib terisi!");
-            setLoading(true);
-
-            let arrItems = [];
-            document.querySelectorAll('.item-row').forEach(row => {
-                const n = row.querySelector('.item-name').value;
+            const cust = document.getElementById('custName').value.trim();
+            if(!cust) return alert('Mohon isi nama customer!');
+            
+            let items = [];
+            let total = 0;
+            document.querySelectorAll('#items-container .item-row').forEach(row => {
+                const n = row.querySelector('.item-name').value.trim();
                 const q = parseRupiah(row.querySelector('.qty').value);
                 const p = parseRupiah(row.querySelector('.price').value);
-                if(n) arrItems.push(`${n} (${q}x @${Number(p).toLocaleString('id-ID')})`);
+                if(n && q > 0) {
+                    items.push({ name: n, qty: q, price: p, subtotal: q*p });
+                    total += (q*p);
+                }
             });
-
-            const total = parseRupiah(document.getElementById('grandTotal').innerText);
             
-            const persenDP = Number(document.getElementById('persenDP').value);
-            const dp = parseRupiah(document.getElementById('inputDP').value || (persenDP === 1 ? total : total * persenDP));
+            if(items.length === 0) return alert('Mohon isi minimal 1 barang!');
+            
+            const dp = parseRupiah(document.getElementById('inputDP').value);
+            const metode = document.getElementById('sumberDana').value;
+            
+            showLoading(true);
+            try {
+                const payload = {
+                    action: 'simpanNota',
+                    customer: cust,
+                    items: items,
+                    total: total,
+                    dp: dp,
+                    metode: metode
+                };
+                
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                showLoading(false);
+                if(data.status === 'success') {
+                    alert('Data pemesanan berhasil disimpan!');
+                    resetPemesananForm();
+                    updateDashboard();
+                } else {
+                    alert('Gagal menyimpan: ' + data.message);
+                }
+            } catch(e) {
+                showLoading(false);
+                alert('Terjadi kesalahan koneksi/server!');
+            }
+        }
 
-            await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value });
-            clearPmesananForm();
+        async function simpanDanCetak() {
+            const cust = document.getElementById('custName').value.trim();
+            if(!cust) return alert('Mohon isi nama customer!');
+            
+            let items = [];
+            let total = 0;
+            document.querySelectorAll('#items-container .item-row').forEach(row => {
+                const n = row.querySelector('.item-name').value.trim();
+                const q = parseRupiah(row.querySelector('.qty').value);
+                const p = parseRupiah(row.querySelector('.price').value);
+                if(n && q > 0) {
+                    items.push({ name: n, qty: q, price: p, subtotal: q*p });
+                    total += (q*p);
+                }
+            });
+            
+            if(items.length === 0) return alert('Mohon isi minimal 1 barang!');
+            
+            const dp = parseRupiah(document.getElementById('inputDP').value);
+            const metode = document.getElementById('sumberDana').value;
+            
+            showLoading(true);
+            try {
+                const payload = {
+                    action: 'simpanNota',
+                    customer: cust,
+                    items: items,
+                    total: total,
+                    dp: dp,
+                    metode: metode
+                };
+                
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                showLoading(false);
+                if(data.status === 'success') {
+                    cetakNotaDirect(cust, items, total, dp, metode, new Date().toLocaleDateString('id-ID'));
+                    resetPemesananForm();
+                    updateDashboard();
+                } else {
+                    alert('Gagal menyimpan: ' + data.message);
+                }
+            } catch(e) {
+                showLoading(false);
+                alert('Terjadi kesalahan koneksi/server!');
+            }
+        }
+
+        function cetakNotaDirect(cust, items, total, dp, metode, tgl, isLunas = false, metodeLunas = '') {
+            document.getElementById('print-cust').innerText = cust;
+            document.getElementById('print-tgl').innerText = tgl;
+            
+            // Badge Metode
+            document.getElementById('print-metode-dp').innerText = metode.toUpperCase();
+            if(metodeLunas && isLunas) {
+                const lunasElem = document.getElementById('print-metode-lunas');
+                lunasElem.innerText = 'LUNAS: ' + metodeLunas.toUpperCase();
+                lunasElem.classList.remove('hidden');
+            } else {
+                document.getElementById('print-metode-lunas').classList.add('hidden');
+            }
+            
+            const tbody = document.getElementById('print-items-tbody');
+            tbody.innerHTML = '';
+            items.forEach(it => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold">${it.name}</td>
+                    <td class="p-3 text-right">Rp ${Number(it.price).toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-center">${it.qty}</td>
+                    <td class="p-3 text-right font-bold">Rp ${Number(it.subtotal).toLocaleString('id-ID')}</td>`;
+                tbody.appendChild(tr);
+            });
+            
+            document.getElementById('print-total').innerText = 'Rp ' + Number(total).toLocaleString('id-ID');
+            
+            const sisa = total - dp;
+            const stempel = document.getElementById('print-stempel-lunas');
+            
+            // Tampilan Tetap Ada DP & Sisa + Stempel Jika Lunas
+            document.getElementById('print-dp').innerText = '- Rp ' + Number(dp).toLocaleString('id-ID');
+            document.getElementById('print-sisa').innerText = 'Rp ' + Number(sisa > 0 ? sisa : 0).toLocaleString('id-ID');
+
+            if(isLunas || sisa <= 0) {
+                stempel.classList.remove('hidden');
+            } else {
+                stempel.classList.add('hidden');
+            }
+            
+            document.getElementById('print-area').classList.remove('hidden');
+            window.print();
+            document.getElementById('print-area').classList.add('hidden');
         }
 
         async function simpanPengeluaran() {
-            const ket = document.getElementById('expKeterangan').value;
+            const ket = document.getElementById('expKeterangan').value.trim();
             const total = parseRupiah(document.getElementById('expTotal').value);
-            if(!ket || !total) return alert("Form wajib terisi!");
-            setLoading(true);
-            await sendPost({ tipe: "Pengeluaran", items: ket, total: total, metode: document.getElementById('expMetode').value });
-            document.getElementById('expKeterangan').value = ''; document.getElementById('expTotal').value = '';
-            showPage('dashboard');
+            const metode = document.getElementById('expMetode').value;
+            
+            if(!ket || total <= 0) return alert('Mohon isi keterangan dan nominal valid!');
+            
+            showLoading(true);
+            try {
+                const payload = { action: 'simpanPengeluaran', keterangan: ket, total: total, metode: metode };
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                showLoading(false);
+                if(data.status === 'success') {
+                    alert('Pengeluaran berhasil disimpan!');
+                    document.getElementById('expKeterangan').value = '';
+                    document.getElementById('expTotal').value = '';
+                    updateDashboard();
+                } else alert('Gagal: ' + data.message);
+            } catch(e) {
+                showLoading(false);
+                alert('Kesalahan jaringan!');
+            }
         }
 
         async function simpanMutasi() {
             const dari = document.getElementById('mutasiDari').value;
             const ke = document.getElementById('mutasiKe').value;
             const total = parseRupiah(document.getElementById('mutasiTotal').value);
-            if(!total || dari === ke) return alert("Cek pengisian form transfer!");
-            setLoading(true);
-            await sendPost({ tipe: "Peralihan", dari: dari, ke: ke, total: total });
-            document.getElementById('mutasiTotal').value = '';
-            showPage('dashboard');
+            
+            if(dari === ke) return alert('Sumber dan Tujuan kas tidak boleh sama!');
+            if(total <= 0) return alert('Masukkan nominal mutasi valid!');
+            
+            showLoading(true);
+            try {
+                const payload = { action: 'simpanMutasi', dari: dari, ke: ke, total: total };
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                showLoading(false);
+                if(data.status === 'success') {
+                    alert('Mutasi kas berhasil diproses!');
+                    document.getElementById('mutasiTotal').value = '';
+                    updateDashboard();
+                } else alert('Gagal: ' + data.message);
+            } catch(e) {
+                showLoading(false);
+                alert('Kesalahan jaringan!');
+            }
         }
 
-        function openPelunasanModal(id) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
-            document.getElementById('lunas-id').value = item[0];
-            document.getElementById('lunas-cust-name').innerText = item[1];
-            const sisa = Number(item[5] || 0);
-            document.getElementById('lunas-sisa-text').innerText = "Rp " + sisa.toLocaleString('id-ID');
-            document.getElementById('lunas-metode').value = item[6] || 'Cash';
+        async function updateDashboard() {
+            showLoading(true);
+            const bln = document.getElementById('searchBulan').value;
+            const thn = document.getElementById('searchTahun').value;
+            
+            try {
+                const res = await fetch(`${API_URL}?action=getDashboard&bulan=${bln}&tahun=${thn}`);
+                const data = await res.json();
+                showLoading(false);
+                
+                if(data.status === 'success') {
+                    document.getElementById('saldoCash').innerText = 'Rp ' + Number(data.saldo.Cash || 0).toLocaleString('id-ID');
+                    document.getElementById('saldoBNI').innerText = 'Rp ' + Number(data.saldo.BNI || 0).toLocaleString('id-ID');
+                    document.getElementById('saldoBRI').innerText = 'Rp ' + Number(data.saldo.BRI || 0).toLocaleString('id-ID');
+                    
+                    document.getElementById('totalPemasukan').innerText = 'Rp ' + Number(data.bulanIni.masuk || 0).toLocaleString('id-ID');
+                    document.getElementById('totalPengeluaran').innerText = 'Rp ' + Number(data.bulanIni.keluar || 0).toLocaleString('id-ID');
+                    document.getElementById('totalKeuntungan').innerText = 'Rp ' + Number(data.bulanIni.laba || 0).toLocaleString('id-ID');
+                    document.getElementById('totalPiutang').innerText = 'Rp ' + Number(data.totalPiutang || 0).toLocaleString('id-ID');
+                    
+                    document.getElementById('miniMasuk').innerText = 'Rp ' + Number(data.bulanIni.masuk || 0).toLocaleString('id-ID');
+                    document.getElementById('miniKeluar').innerText = 'Rp ' + Number(data.bulanIni.keluar || 0).toLocaleString('id-ID');
+                    document.getElementById('miniLaba').innerText = 'Rp ' + Number(data.bulanIni.laba || 0).toLocaleString('id-ID');
+                    
+                    globalDataCache.riwayatNota = data.riwayatNota || [];
+                    globalDataCache.riwayatExp = data.riwayatExp || [];
+                    
+                    renderTables();
+                    renderOrderflow(data.riwayatNota || []);
+                }
+            } catch(e) {
+                showLoading(false);
+            }
+        }
+
+        function renderTables() {
+            const notaBody = document.getElementById('tbody-nota');
+            const expBody = document.getElementById('tbody-pengeluaran');
+            const mutasiBody = document.getElementById('tbody-peralihan');
+            
+            notaBody.innerHTML = '';
+            expBody.innerHTML = '';
+            mutasiBody.innerHTML = '';
+            
+            globalDataCache.riwayatNota.forEach(n => {
+                const tr = document.createElement('tr');
+                const sisa = n.total - n.dp;
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-slate-800">${n.customer}<br><span class="text-xs font-normal text-slate-400">${n.tanggal}</span></td>
+                    <td class="p-4 font-semibold">Rp ${Number(n.total).toLocaleString('id-ID')}</td>
+                    <td class="p-4 font-bold ${sisa > 0 ? 'text-rose-500' : 'text-emerald-500'}">${sisa > 0 ? 'Rp ' + sisa.toLocaleString('id-ID') : 'LUNAS'}</td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            ${sisa > 0 ? `<button onclick="openPelunasanModal('${n.id}', '${n.customer}', ${sisa})" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow">Pelunasan</button>` : ''}
+                            <button onclick="cetakExistingNota('${n.id}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow"><i class="fas fa-print"></i> Cetak</button>
+                            <button onclick="openEditModal('${n.id}')" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow"><i class="fas fa-edit"></i></button>
+                            <button onclick="hapusNota('${n.id}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>`;
+                notaBody.appendChild(tr);
+            });
+            
+            globalDataCache.riwayatExp.forEach(e => {
+                const tr = document.createElement('tr');
+                if(e.isMutasi) {
+                    tr.innerHTML = `
+                        <td class="p-4 font-semibold text-slate-500">${e.tanggal}</td>
+                        <td class="p-4 font-bold text-slate-700">${e.keterangan}</td>
+                        <td class="p-4 font-bold text-amber-600">Rp ${Number(e.total).toLocaleString('id-ID')}</td>
+                        <td class="p-4 text-center"><button onclick="hapusPengeluaran('${e.id}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow"><i class="fas fa-trash"></i></button></td>`;
+                    mutasiBody.appendChild(tr);
+                } else {
+                    tr.innerHTML = `
+                        <td class="p-4 font-semibold text-slate-500">${e.tanggal}</td>
+                        <td class="p-4 font-bold text-slate-700">${e.keterangan}<br><span class="text-xs font-normal text-slate-400">Kas: ${e.metode}</span></td>
+                        <td class="p-4 font-bold text-red-500">Rp ${Number(e.total).toLocaleString('id-ID')}</td>
+                        <td class="p-4 text-center"><button onclick="hapusPengeluaran('${e.id}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow"><i class="fas fa-trash"></i></button></td>`;
+                    expBody.appendChild(tr);
+                }
+            });
+        }
+
+        function renderOrderflow(notaList) {
+            const body = document.getElementById('table-orderflow');
+            body.innerHTML = '';
+            
+            notaList.forEach(n => {
+                const sisa = n.total - n.dp;
+                if(sisa > 0) {
+                    const parts = n.tanggal.split('/');
+                    let orderDate = new Date();
+                    if(parts.length === 3) {
+                        orderDate = new Date(parts[2], parts[1]-1, parts[0]);
+                    }
+                    
+                    const deadline = new Date(orderDate);
+                    deadline.setDate(deadline.getDate() + 7);
+                    
+                    const today = new Date();
+                    const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                    
+                    const itemsDesc = n.items.map(i => `${i.name} (${i.qty})`).join(', ');
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-4 font-bold text-slate-800">${n.customer}</td>
+                        <td class="p-4 text-xs font-semibold text-slate-600">${itemsDesc}</td>
+                        <td class="p-4 text-xs">${n.tanggal}</td>
+                        <td class="p-4 text-xs font-bold text-rose-500">${deadline.toLocaleDateString('id-ID')}</td>
+                        <td class="p-4 font-bold ${diffDays < 2 ? 'text-red-600 animate-pulse' : 'text-slate-700'}">${diffDays} Hari Lagi</td>
+                        <td class="p-4 text-center"><span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">Proses</span></td>`;
+                    body.appendChild(tr);
+                }
+            });
+        }
+
+        function openPelunasanModal(id, cust, sisa) {
+            document.getElementById('lunas-id').value = id;
+            document.getElementById('lunas-cust-name').innerText = cust;
+            document.getElementById('lunas-sisa-text').innerText = 'Rp ' + Number(sisa).toLocaleString('id-ID');
             document.getElementById('modal-pelunasan').classList.remove('hidden');
         }
 
@@ -900,335 +985,205 @@
 
         async function eksekusiPelunasanFinal() {
             const id = document.getElementById('lunas-id').value;
-            const metodeBaru = document.getElementById('lunas-metode').value;
-            closePelunasanModal();
-            setLoading(true);
-
+            const metode = document.getElementById('lunas-metode').value;
+            
+            showLoading(true);
             try {
-                await fetch(API_URL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    headers: { 'Content-Type': 'text/plain' }, 
-                    body: JSON.stringify({ tipe: "Pelunasan", id: id, metode: metodeBaru }) 
-                });
+                const payload = { action: 'pelunasanNota', id: id, metodePelunasan: metode };
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                showLoading(false);
+                
+                if(data.status === 'success') {
+                    closePelunasanModal();
+                    const nota = globalDataCache.riwayatNota.find(n => n.id == id);
+                    if(nota) {
+                        // Cetak nota pelunasan dengan DP dan sisa pelunasan tetap ada + stempel lunas
+                        cetakNotaDirect(nota.customer, nota.items, nota.total, nota.dp, nota.metode, nota.tanggal, true, metode);
+                    }
+                    updateDashboard();
+                } else alert('Gagal pelunasan: ' + data.message);
+            } catch(e) {
+                showLoading(false);
+                alert('Kesalahan jaringan!');
+            }
+        }
 
-                window._lastPelunasanMetode = metodeBaru;
-                cetakNotaStruk(id, true);
-
-                setTimeout(async () => { 
-                    await updateDashboard(); 
-                    setLoading(false); 
-                }, 2000);
-            } catch (error) {
-                console.error("Gagal melakukan pelunasan:", error);
-                setLoading(false);
+        function cetakExistingNota(id) {
+            const nota = globalDataCache.riwayatNota.find(n => n.id == id);
+            if(nota) {
+                const isLunas = (nota.total - nota.dp) <= 0;
+                cetakNotaDirect(nota.customer, nota.items, nota.total, nota.dp, nota.metode, nota.tanggal, isLunas, nota.metodePelunasan || '');
             }
         }
 
         function openEditModal(id) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
-
-            document.getElementById('edit-id').value = item[0];
-            document.getElementById('edit-nama').value = item[1];
-            document.getElementById('edit-dp').value = Number(item[4]).toLocaleString('id-ID');
-            document.getElementById('edit-metode').value = item[6] || 'Cash';
-
+            const nota = globalDataCache.riwayatNota.find(n => n.id == id);
+            if(!nota) return;
+            
+            document.getElementById('edit-id').value = nota.id;
+            document.getElementById('edit-nama').value = nota.customer;
+            document.getElementById('edit-dp').value = Number(nota.dp).toLocaleString('id-ID');
+            document.getElementById('edit-metode').value = nota.metode || 'Cash';
+            
             const container = document.getElementById('edit-items-container');
             container.innerHTML = '';
-
-            let rawItems = item[2];
-            try {
-                if(rawItems.startsWith('[')) rawItems = JSON.parse(rawItems);
-            } catch(e) {}
-
-            if(typeof rawItems === 'string' && rawItems.includes('x @')) {
-                const parts = rawItems.split(', ');
-                parts.forEach(p => {
-                    const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
-                    if(matches) {
-                        addEditItemRow(matches[1], matches[2], matches[3].replace(/\./g, ''));
-                    } else {
-                        addEditItemRow(p, 1, 0);
-                    }
-                });
-            } else {
-                addEditItemRow(rawItems, 1, item[3]);
-            }
-
+            
+            nota.items.forEach(it => {
+                const row = document.createElement('div');
+                row.className = 'edit-item-row grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-50 p-2 rounded-xl border';
+                row.innerHTML = `
+                    <input type="text" placeholder="Barang" value="${it.name}" class="edit-name p-2 border rounded-lg text-xs outline-none">
+                    <input type="text" placeholder="Qty" value="${Number(it.qty).toLocaleString('id-ID')}" oninput="formatInputRupiah(this); hitungTotalEdit()" class="edit-qty p-2 border rounded-lg text-xs outline-none">
+                    <input type="text" placeholder="Harga" value="${Number(it.price).toLocaleString('id-ID')}" oninput="formatInputRupiah(this); hitungTotalEdit()" class="edit-price p-2 border rounded-lg text-xs outline-none">`;
+                container.appendChild(row);
+            });
+            
             hitungTotalEdit();
             document.getElementById('modal-edit').classList.remove('hidden');
         }
 
-        function addEditItemRow(name = '', qty = 1, price = 0) {
+        function addEditItemRow() {
             const container = document.getElementById('edit-items-container');
             const row = document.createElement('div');
-            row.className = 'edit-item-row grid grid-cols-1 sm:grid-cols-4 gap-2 items-center bg-slate-50 p-3 rounded-xl border';
+            row.className = 'edit-item-row grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-50 p-2 rounded-xl border';
             row.innerHTML = `
-                <input type="text" placeholder="Nama Barang" value="${name}" class="edit-item-name p-2 rounded-lg border text-xs outline-none col-span-1 sm:col-span-1">
-                <input type="text" placeholder="Qty" value="${qty}" class="edit-qty p-2 rounded-lg border text-xs outline-none" oninput="formatInputRupiah(this); hitungTotalEdit()">
-                <input type="text" placeholder="Harga" value="${Number(price).toLocaleString('id-ID')}" class="edit-price p-2 rounded-lg border text-xs outline-none" oninput="formatInputRupiah(this); hitungTotalEdit()">
-                <div class="flex justify-between items-center sm:justify-end gap-2">
-                    <span class="edit-subtotal-text font-bold text-xs text-slate-800">Rp 0</span>
-                    <button type="button" onclick="this.closest('.edit-item-row').remove(); hitungTotalEdit();" class="text-rose-500 hover:text-rose-700 p-1"><i class="fas fa-trash text-xs"></i></button>
-                </div>`;
+                <input type="text" placeholder="Barang" class="edit-name p-2 border rounded-lg text-xs outline-none">
+                <input type="text" placeholder="Qty" oninput="formatInputRupiah(this); hitungTotalEdit()" class="edit-qty p-2 border rounded-lg text-xs outline-none">
+                <input type="text" placeholder="Harga" oninput="formatInputRupiah(this); hitungTotalEdit()" class="edit-price p-2 border rounded-lg text-xs outline-none">`;
             container.appendChild(row);
-            hitungTotalEdit();
         }
 
         function hitungTotalEdit() {
             let total = 0;
-            document.querySelectorAll('.edit-item-row').forEach(row => {
-                const qty = parseRupiah(row.querySelector('.edit-qty').value);
-                const price = parseRupiah(row.querySelector('.edit-price').value);
-                const sub = qty * price;
-                total += sub;
-                row.querySelector('.edit-subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
+            document.querySelectorAll('.edit-item-row').forEach(r => {
+                const q = parseRupiah(r.querySelector('.edit-qty').value);
+                const p = parseRupiah(r.querySelector('.edit-price').value);
+                total += (q * p);
             });
-
+            
             const dp = parseRupiah(document.getElementById('edit-dp').value);
-            const sisa = Math.max(0, total - dp);
-
-            document.getElementById('edit-grandTotal-text').innerText = "Rp " + total.toLocaleString('id-ID');
-            document.getElementById('edit-sisaTagihan-text').innerText = "Rp " + sisa.toLocaleString('id-ID');
+            const sisa = total - dp;
+            
+            document.getElementById('edit-grandTotal-text').innerText = 'Rp ' + total.toLocaleString('id-ID');
+            document.getElementById('edit-sisaTagihan-text').innerText = 'Rp ' + (sisa > 0 ? sisa : 0).toLocaleString('id-ID');
         }
 
-        function closeEditModal() { 
-            document.getElementById('modal-edit').classList.add('hidden'); 
+        function closeEditModal() {
+            document.getElementById('modal-edit').classList.add('hidden');
         }
 
         async function submitEditNota(e) {
             e.preventDefault();
-            closeEditModal();
-            setLoading(true);
-
-            let arrItems = [];
-            document.querySelectorAll('.edit-item-row').forEach(row => {
-                const n = row.querySelector('.edit-item-name').value;
-                const q = parseRupiah(row.querySelector('.edit-qty').value);
-                const p = parseRupiah(row.querySelector('.edit-price').value);
-                if(n) arrItems.push(`${n} (${q}x @${Number(p).toLocaleString('id-ID')})`);
-            });
-
-            const total = parseRupiah(document.getElementById('edit-grandTotal-text').innerText);
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-nama').value.trim();
             const dp = parseRupiah(document.getElementById('edit-dp').value);
-
-            await sendPost({ 
-                tipe: "EditNota", 
-                id: document.getElementById('edit-id').value, 
-                nama: document.getElementById('edit-nama').value, 
-                items: arrItems.join(", "), 
-                total: total, 
-                dp: dp, 
-                metode: document.getElementById('edit-metode').value 
-            });
-        }
-
-        async function deleteNota(id) { if(confirm("Hapus data nota pemesanan?")) { setLoading(true); await sendPost({ tipe: "HapusNota", id: id }); } }
-        async function deletePengeluaran(id) { if(confirm("Hapus catatan ini?")) { setLoading(true); await sendPost({ tipe: "HapusPengeluaran", id: id }); } }
-
-        function kirimWhatsAppEstimasi() {
-            const name = document.getElementById('waCustName').value || 'Pelanggan'; 
-            let strings = []; 
-            document.querySelectorAll('.est-item-row').forEach(row => {
-                const n = row.querySelector('.est-name').value; 
-                const q = parseRupiah(row.querySelector('.est-qty').value); 
-                const p = parseRupiah(row.querySelector('.est-price').value);
-                if(n) strings.push(`- ${n} (Qty: ${q} x Rp ${Number(p).toLocaleString('id-ID')})`);
-            });
+            const metode = document.getElementById('edit-metode').value;
             
-            const bonusVal = document.getElementById('waBonusPaket').value;
-            let bonusInfo = (bonusVal && bonusVal !== "") ? `\n*Paket Bonus:* ${bonusVal}` : "";
-
-            const persenVal = Number(document.getElementById('estPersenDP').value);
-            let text = "";
-            
-            if (persenVal === 1) {
-                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Tagihan (Lunas):* ${document.getElementById('estTotal').innerText}\n\nTerima kasih kak! ✨`;
-            } else {
-                const persenStr = (persenVal * 100) + "%";
-                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
-            }
-            
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-        }
-
-        function parseItemsToPrintRows(itemsString, fallbackTotal) {
-            const tbody = document.getElementById('print-items-tbody');
-            tbody.innerHTML = '';
-
-            if (itemsString && itemsString.includes('x @')) {
-                const parts = itemsString.split(', ');
-                parts.forEach(p => {
-                    const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
-                    if (matches) {
-                        const name = matches[1];
-                        const qty = matches[2];
-                        const price = Number(matches[3].replace(/[^0-9]/g, ''));
-                        const sub = qty * price;
-
-                        const tr = document.createElement('tr');
-                        tr.className = "border-b border-slate-100";
-                        tr.innerHTML = `
-                            <td class="p-3 font-bold text-slate-900">${name}</td>
-                            <td class="p-3 text-right">Rp ${price.toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-center">${qty}</td>
-                            <td class="p-3 text-right font-semibold">Rp ${sub.toLocaleString('id-ID')}</td>`;
-                        tbody.appendChild(tr);
-                    }
-                });
-            } else {
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-slate-100";
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-slate-900">${itemsString || '-'}</td>
-                    <td class="p-3 text-right">Rp ${Number(fallbackTotal).toLocaleString('id-ID')}</td>
-                    <td class="p-3 text-center">1</td>
-                    <td class="p-3 text-right font-semibold">Rp ${Number(fallbackTotal).toLocaleString('id-ID')}</td>`;
-                tbody.appendChild(tr);
-            }
-        }
-    
-        function cetakNotaStruk(id, isForceLunas) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
-            
-            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-            const totalBayar = Number(item[3] || 0);
-            
-            let dpBayar = isForceLunas ? totalBayar : Number(item[4] || 0);
-            let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
-            
-            // Cek apakah murni lunas (sisa piutang 0 atau dipaksa lunas)
-            const isLunasMurni = (sisaHutang === 0 || isForceLunas);
-
-            document.getElementById('print-cust').innerText = item[1];
-            const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-            document.getElementById('print-tgl').innerText = tglFormatted;
-            
-            parseItemsToPrintRows(item[2], totalBayar);
-            
-            document.getElementById('print-total').innerText = fmt(totalBayar);
-            
-            const dpRow = document.getElementById('print-dp-row');
-            const sisaRow = document.getElementById('print-sisa-row');
-            const stempelElm = document.getElementById('print-stempel-lunas');
-            const metodeContainer = document.getElementById('print-metode-container');
-            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
-
-            if (isLunasMurni) {
-                // Sembunyikan baris DP dan Sisa Piutang jika langsung lunas
-                dpRow.style.display = 'none';
-                sisaRow.style.display = 'none';
-                stempelElm.classList.remove('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = isForceLunas ? (window._lastPelunasanMetode || item[6] || 'Cash') : (item[6] || 'Cash');
-            } else {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
-                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-                document.getElementById('print-sisa').innerText = fmt(sisaHutang);
-                stempelElm.classList.add('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
-            }
-
-            const oldTitle = document.title;
-            const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
-            const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
-            document.title = `${cleanCustName}_${cleanDate}`;
-            
-            window.print();
-            
-            setTimeout(() => { document.title = oldTitle; }, 1000);
-        }
-
-        function simpanDanCetak() {
-            const custName = document.getElementById('custName').value;
-            if(!custName) return alert("Masukkan nama pelanggan untuk cetak nota!");
-
-            const tbody = document.getElementById('print-items-tbody');
-            tbody.innerHTML = '';
-
-            document.querySelectorAll('.item-row').forEach(row => {
-                const n = row.querySelector('.item-name').value;
-                const q = parseRupiah(row.querySelector('.qty').value);
-                const p = parseRupiah(row.querySelector('.price').value);
-
-                if(n) {
-                    const sub = q * p;
-                    const tr = document.createElement('tr');
-                    tr.className = "border-b border-slate-100";
-                    tr.innerHTML = `
-                        <td class="p-3 font-bold text-slate-900">${n}</td>
-                        <td class="p-3 text-right">Rp ${p.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-center">${q}</td>
-                        <td class="p-3 text-right font-semibold">Rp ${sub.toLocaleString('id-ID')}</td>`;
-                    tbody.appendChild(tr);
+            let items = [];
+            let total = 0;
+            document.querySelectorAll('.edit-item-row').forEach(r => {
+                const n = r.querySelector('.edit-name').value.trim();
+                const q = parseRupiah(r.querySelector('.edit-qty').value);
+                const p = parseRupiah(r.querySelector('.edit-price').value);
+                if(n && q > 0) {
+                    items.push({ name: n, qty: q, price: p, subtotal: q*p });
+                    total += (q*p);
                 }
             });
-
-            const total = parseRupiah(document.getElementById('grandTotal').innerText);
-            const dpVal = parseRupiah(document.getElementById('inputDP').value || 0);
-            const sisaVal = Math.max(0, total - dpVal);
-            const isLunasMurni = (sisaVal === 0);
-
-            const fmt = (val) => "Rp " + Number(val).toLocaleString('id-ID');
-
-            document.getElementById('print-cust').innerText = custName;
-            document.getElementById('print-tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-
-            document.getElementById('print-total').innerText = fmt(total);
             
-            const dpRow = document.getElementById('print-dp-row');
-            const sisaRow = document.getElementById('print-sisa-row');
-            const stempelElm = document.getElementById('print-stempel-lunas');
-            const metodeContainer = document.getElementById('print-metode-container');
-            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
-
-            if (isLunasMurni) {
-                dpRow.style.display = 'none';
-                sisaRow.style.display = 'none';
-                stempelElm.classList.remove('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
-            } else {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
-                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-                document.getElementById('print-sisa').innerText = fmt(sisaVal);
-                stempelElm.classList.add('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
-            }
-
-            const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");
-            const cDate = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
-            const originalTitle = document.title;
-            document.title = `${cName}_${cDate}`;
+            if(items.length === 0) return alert('Mohon isi barang!');
             
-            window.print();
-            setTimeout(() => { document.title = originalTitle; }, 1000);
-
-            simpanData();
-        }
-
-        async function sendPost(payload) {
+            showLoading(true);
             try {
-                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-                setTimeout(async () => { await updateDashboard(); setLoading(false); }, 2000);
-            } catch(e) { setLoading(false); }
+                const payload = { action: 'editNota', id: id, customer: name, items: items, total: total, dp: dp, metode: metode };
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                showLoading(false);
+                
+                if(data.status === 'success') {
+                    alert('Data nota berhasil diubah!');
+                    closeEditModal();
+                    updateDashboard();
+                } else alert('Gagal update: ' + data.message);
+            } catch(e) {
+                showLoading(false);
+                alert('Kesalahan jaringan!');
+            }
         }
-        
-        function setLoading(st) { document.getElementById('loading-state').classList[st ? 'remove' : 'add']('hidden'); }
-        
-        function clearPmesananForm() {
+
+        async function hapusNota(id) {
+            if(!confirm('Yakin ingin menghapus nota transaksi ini?')) return;
+            showLoading(true);
+            try {
+                const payload = { action: 'hapusNota', id: id };
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                showLoading(false);
+                if(data.status === 'success') {
+                    alert('Nota terhapus!');
+                    updateDashboard();
+                } else alert('Gagal hapus: ' + data.message);
+            } catch(e) {
+                showLoading(false);
+            }
+        }
+
+        async function hapusPengeluaran(id) {
+            if(!confirm('Yakin ingin menghapus catatan pengeluaran ini?')) return;
+            showLoading(true);
+            try {
+                const payload = { action: 'hapusPengeluaran', id: id };
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                showLoading(false);
+                if(data.status === 'success') {
+                    alert('Pengeluaran terhapus!');
+                    updateDashboard();
+                } else alert('Gagal hapus: ' + data.message);
+            } catch(e) {
+                showLoading(false);
+            }
+        }
+
+        function filterKategoriRiwayat(cat, btn) {
+            document.querySelectorAll('.riwayat-cat-btn').forEach(b => {
+                b.classList.remove('bg-slate-950', 'text-white', 'shadow-sm');
+                b.classList.add('text-slate-500');
+            });
+            btn.classList.remove('text-slate-500');
+            btn.classList.add('bg-slate-950', 'text-white', 'shadow-sm');
+            
+            document.getElementById('container-tabel-nota').style.display = (cat === 'all' || cat === 'nota') ? 'block' : 'none';
+            document.getElementById('container-tabel-pengeluaran').style.display = (cat === 'all' || cat === 'pengeluaran') ? 'block' : 'none';
+            document.getElementById('container-tabel-peralihan').style.display = (cat === 'all' || cat === 'peralihan') ? 'block' : 'none';
+        }
+
+        function liveFilterText() {
+            const query = document.getElementById('liveSearchInput').value.toLowerCase();
+            
+            document.querySelectorAll('#tbody-nota tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(query) ? '' : 'none';
+            });
+            document.querySelectorAll('#tbody-pengeluaran tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(query) ? '' : 'none';
+            });
+            document.querySelectorAll('#tbody-peralihan tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(query) ? '' : 'none';
+            });
+        }
+
+        function eksekusiCariBulanTahun() {
+            updateDashboard();
+        }
+
+        function showLoading(active) {
+            const state = document.getElementById('loading-state');
+            if(active) state.classList.remove('hidden');
+            else state.classList.add('hidden');
+        }
+
+        function resetPemesananForm() {
             document.getElementById('custName').value = ''; 
             document.getElementById('inputDP').value = '';
             document.getElementById('persenDP').value = '0.5';
@@ -1250,10 +1205,9 @@
         window.onload = function() {
             document.getElementById('main-logo-img').src = LOGO_URL; 
             document.getElementById('print-logo-img').src = LOGO_URL; 
-            
             buildDropdownSelector();
             updateDashboard();
-        };
+        }
     </script>
 </body>
 </html>

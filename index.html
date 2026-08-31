@@ -725,7 +725,6 @@
             renderSplitTablesMaster();
         }
 
-        /* PERBAIKAN TOMBOL EDIT & AKSI */
         function renderSplitTablesMaster() {
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             
@@ -936,7 +935,6 @@
             }
         }
 
-        /* PERBAIKAN TOTAL MODAL EDIT TRANSAKSI */
         function openEditModal(id) {
             if (!globalDataCache || !globalDataCache.riwayatNota) {
                 alert("Data belum dimuat sempurna, silakan refresh halaman.");
@@ -1131,6 +1129,7 @@
             }
         }
     
+        /* PERBAIKAN: MENAMPILKAN NOMINAL DP & SISA PELUNASAN WALAUPUN SUDAH LUNAS */
         function cetakNotaStruk(id, isForceLunas) {
             const item = globalDataCache.riwayatNota.find(r => String(r[0]) == String(id));
             if(!item) return;
@@ -1138,10 +1137,13 @@
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             const totalBayar = Number(item[3] || 0);
             
+            // Nominal DP tetap diambil dari data transaksi asli (item[4])
             let dpBayar = Number(item[4] || 0);
+            
+            // Sisa pelunasan dihitung dari total dikurangi DP, atau 0 jika force lunas
             let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
             
-            const isLunasMurni = (sisaHutang === 0 || isForceLunas);
+            const isLunasMurni = (Number(item[5] || 0) === 0 || isForceLunas);
 
             document.getElementById('print-cust').innerText = item[1];
             const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
@@ -1158,8 +1160,10 @@
             const badgeDPContainer = document.getElementById('print-badge-dp-container');
             const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
 
+            // Tetap munculkan baris DP & Sisa Pelunasan
             dpRow.style.display = 'flex';
             sisaRow.style.display = 'flex';
+            
             document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
             document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
             document.getElementById('print-sisa').innerText = fmt(sisaHutang);

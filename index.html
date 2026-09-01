@@ -112,9 +112,9 @@
 
         <div id="input" class="page-section p-10">
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-                        <h2 class="text-2xl font-bold text-slate-800">Input Transaksi</h2>
-                        <div class="bg-slate-100 p-1 rounded-xl flex flex-wrap gap-1 max-w-full">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800">Input Transaksi</h2>
+                    <div class="bg-slate-100 p-1 rounded-xl flex flex-wrap gap-1 max-w-full">
                         <button onclick="showInput('pemesanan', this)" class="form-tab-btn px-5 py-2.5 rounded-lg font-semibold text-sm bg-emerald-500 text-white shadow-sm">Pemesanan</button>
                         <button onclick="showInput('pengeluaran', this)" class="form-tab-btn px-5 py-2.5 rounded-lg font-semibold text-sm text-slate-500">Pengeluaran</button>
                         <button onclick="showInput('peralihan', this)" class="form-tab-btn px-5 py-2.5 rounded-lg font-semibold text-sm text-slate-500">Mutasi</button>
@@ -270,8 +270,8 @@
                 <h2 class="text-2xl font-bold text-slate-800">Riwayat Buku Keuangan</h2>
             </div>
             
-                <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 lg:p-5 rounded-3xl border border-slate-100 shadow-sm">
-                    <div class="flex flex-wrap p-1 bg-slate-100 rounded-xl gap-1 w-full lg:w-auto">
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 lg:p-5 rounded-3xl border border-slate-100 shadow-sm">
+                <div class="flex flex-wrap p-1 bg-slate-100 rounded-xl gap-1 w-full lg:w-auto">
                     <button onclick="filterKategoriRiwayat('all', this)" class="riwayat-cat-btn px-4 py-2 rounded-lg font-bold text-sm bg-slate-950 text-white shadow-sm">Semua data</button>
                     <button onclick="filterKategoriRiwayat('nota', this)" class="riwayat-cat-btn px-4 py-2 rounded-lg font-semibold text-sm text-slate-500">Pemesanan (Nota)</button>
                     <button onclick="filterKategoriRiwayat('pengeluaran', this)" class="riwayat-cat-btn px-4 py-2 rounded-lg font-semibold text-sm text-slate-500">Pengeluaran</button>
@@ -321,6 +321,7 @@
                     </table>
                 </div>
             </div>
+
             <div id="container-tabel-peralihan" class="riwayat-table-view space-y-3">
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-exchange-alt text-amber-500"></i> Riwayat Peralihan Dana (Mutasi Internal)</h3>
                 <div class="bg-white rounded-3xl border overflow-x-auto shadow-sm w-full min-w-full">
@@ -336,7 +337,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT NOTA (DIUBAH JADI FORM INTERAKTIF) -->
+    <!-- MODAL EDIT NOTA -->
     <div id="modal-edit" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3">
@@ -352,9 +353,7 @@
                 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Daftar Barang</label>
-                    <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1">
-                        <!-- Baris barang dinamis untuk edit -->
-                    </div>
+                    <div id="edit-items-container" class="space-y-3 max-h-60 overflow-y-auto p-1"></div>
                     <button type="button" onclick="addEditItemRow()" class="text-emerald-600 font-semibold text-xs hover:underline mt-2 inline-block">+ Tambah Barang</button>
                 </div>
 
@@ -375,7 +374,7 @@
                         <input type="text" id="edit-dp" placeholder="DP / Bayar" required oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran Saat Pelunasan</label>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran DP</label>
                         <select id="edit-metode" class="w-full p-3 border rounded-xl bg-white text-sm">
                             <option value="Cash">Cash / Tunai</option>
                             <option value="BRI">Transfer BRI</option>
@@ -392,7 +391,7 @@
         </div>
     </div>
 
-    <!-- MODAL PELUNASAN DENGAN PILIHAN METODE BAYAR -->
+    <!-- MODAL PELUNASAN -->
     <div id="modal-pelunasan" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -426,31 +425,45 @@
         </div>
     </div>
 
-<div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
-    <div class="flex items-stretch border border-sky-200 rounded-xl overflow-hidden mb-4">
-        <div class="flex items-center gap-4 p-4 flex-1">
-            <img id="print-logo-img" src="" alt="Logo" class="w-16 h-16 object-contain">
-            <div class="text-left">
-                <h1 class="text-2xl font-black text-slate-800 tracking-wider leading-none mb-1">ASHEEQA PRINTING</h1>
-                <p class="text-xs font-bold text-sky-600 tracking-wide">Percetakan & Desain Undangan</p>
-                <p class="text-[10px] text-slate-500 font-medium mt-0.5">Jl. Borong Raya 2 | WhatsApp: 089699910769</p>
+    <!-- PRINT AREA -->
+    <div id="print-area" class="hidden bg-white text-slate-800 text-sm leading-relaxed w-full">
+        <div class="flex items-stretch border border-sky-200 rounded-xl overflow-hidden mb-4">
+            <div class="flex items-center gap-4 p-4 flex-1">
+                <img id="print-logo-img" src="" alt="Logo" class="w-16 h-16 object-contain">
+                <div class="text-left">
+                    <h1 class="text-2xl font-black text-slate-800 tracking-wider leading-none mb-1">ASHEEQA PRINTING</h1>
+                    <p class="text-xs font-bold text-sky-600 tracking-wide">Percetakan & Desain Undangan</p>
+                    <p class="text-[10px] text-slate-500 font-medium mt-0.5">Jl. Borong Raya 2 | WhatsApp: 089699910769</p>
+                </div>
+            </div>
+            <div class="border-l border-sky-200 w-48 flex items-center justify-center bg-slate-50/10">
+                <h1 class="text-2xl font-black text-slate-400 tracking-widest uppercase">NOTA</h1>
             </div>
         </div>
-        <div class="border-l border-sky-200 w-48 flex items-center justify-center bg-slate-50/10">
-            <h1 class="text-2xl font-black text-slate-400 tracking-widest uppercase">NOTA</h1>
-        </div>
-    </div>
 
-    <div class="border border-sky-200 rounded-full px-6 py-3 flex justify-between items-center text-xs font-bold text-slate-800 mb-8">
-        <div class="flex gap-2">
-            <span>Kepada Yth:</span>
-            <span id="print-cust" class="font-semibold text-slate-600">-</span>
+        <div class="border border-sky-200 rounded-2xl px-6 py-3 flex flex-col md:flex-row justify-between items-start md:items-center text-xs text-slate-800 mb-6 gap-2 bg-slate-50/30">
+            <div class="flex flex-col gap-1">
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-500">Kepada Yth:</span>
+                    <span id="print-cust" class="font-bold text-slate-900">-</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-500">Tanggal:</span>
+                    <span id="print-tgl" class="font-semibold text-slate-700">-</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-2 items-center">
+                <div id="print-badge-dp-container" class="flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-sky-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                    <i class="fas fa-credit-card text-sky-600"></i>
+                    <span>Metode DP: <strong id="print-badge-dp" class="uppercase text-sky-950">Cash</strong></span>
+                </div>
+                <div id="print-badge-lunas-container" class="hidden flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                    <i class="fas fa-check-circle text-emerald-600"></i>
+                    <span>Metode Pelunasan: <strong id="print-badge-lunas" class="uppercase text-emerald-950">-</strong></span>
+                </div>
+            </div>
         </div>
-        <div class="flex gap-2">
-            <span>Tanggal:</span>
-            <span id="print-tgl" class="font-semibold text-slate-600">-</span>
-        </div>
-    </div>
 
         <div class="border border-slate-200 rounded-xl overflow-hidden mb-6">
             <table class="w-full text-left text-xs border-collapse">
@@ -462,20 +475,14 @@
                         <th class="p-3 text-right w-32">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                    </tbody>
+                <tbody id="print-items-tbody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
             </table>
         </div>
 
         <div class="flex justify-between items-end">
-            <!-- STEMPEL LUNAS & INFO METODE PEMBAYARAN -->
             <div class="flex flex-col gap-3">
                 <div id="print-stempel-lunas" class="hidden border-4 border-red-500 text-red-500 font-black text-2xl tracking-widest px-6 py-2 rounded-xl uppercase transform -rotate-12 inline-block text-center shadow-sm">
                     LUNAS
-                </div>
-                <div class="text-xs font-semibold text-slate-600 space-y-1">
-                    <p id="print-metode-container">Metode Pembayaran: <span id="print-metode-dp" class="font-bold text-slate-800">-</span></p>
-                    <p id="print-metode-lunas-container" class="hidden">Metode Bayar Pelunasan: <span id="print-metode-lunas" class="font-bold text-slate-800">-</span></p>
                 </div>
             </div>
 
@@ -653,14 +660,14 @@
                 document.getElementById('miniKeluar').innerText = fmt(data.keluarBulanIni);
                 document.getElementById('miniLaba').innerText = fmt(data.labaBersih);
 
-                localNotaList = data.riwayatNota;
-                localExpList = data.riwayatExp;
+                localNotaList = data.riwayatNota || [];
+                localExpList = data.riwayatExp || [];
 
                 renderOrderflowTable(data.riwayatNota);
                 renderSplitTablesMaster();
 
                 setLoading(false);
-            } catch(e) { console.error("Dashboard error");
+            } catch(e) { console.error("Dashboard error", e);
                 setLoading(false);
             }
         }
@@ -689,8 +696,6 @@
         }
 
         function filterKategoriRiwayat(kategori, element) {
-            currentKategoriTab = kategori;
-
             document.querySelectorAll('.riwayat-cat-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-950', 'text-white', 'shadow-sm', 'font-bold');
                 btn.classList.add('text-slate-500', 'font-semibold');
@@ -720,6 +725,14 @@
             renderSplitTablesMaster();
         }
 
+        function getNotaItemById(id) {
+            let item = globalDataCache.riwayatNota ? globalDataCache.riwayatNota.find(r => String(r[0]) == String(id)) : null;
+            if (!item && localNotaList) {
+                item = localNotaList.find(r => String(r[0]) == String(id));
+            }
+            return item;
+        }
+
         function renderSplitTablesMaster() {
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             
@@ -731,12 +744,15 @@
                 tbodyNota.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
             } else {
                 listNotaReal.forEach(r => {
-                    let itemDesc = r[2]; try { itemDesc = JSON.parse(r[2]); } catch(e){}
+                    let itemDesc = r[2]; 
+                    try { itemDesc = JSON.parse(r[2]); } catch(e){}
                     
-                    let btnAwal = `<button onclick="cetakNotaStruk('${r[0]}', false)" class="text-sky-500 p-1 hover:bg-sky-50 rounded" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice"></i></button>`;
-                    let btnLunas = `<button onclick="openPelunasanModal('${r[0]}')" class="text-emerald-500 p-1 hover:bg-emerald-50 rounded" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle"></i></button>`;
-                    let btnEdit = `<button onclick="openEditModal('${r[0]}')" class="text-amber-500 p-1 hover:bg-amber-50 rounded" title="Edit Transaksi"><i class="fas fa-edit"></i></button>`;
-                    let btnHapus = `<button onclick="deleteNota('${r[0]}')" class="text-rose-500 p-1 hover:bg-rose-50 rounded" title="Hapus Data"><i class="fas fa-trash-alt"></i></button>`;
+                    const safeId = String(r[0]).replace(/'/g, "\\'");
+
+                    let btnAwal = `<button type="button" onclick="cetakNotaStruk('${safeId}', false)" class="text-sky-500 hover:text-sky-700 p-2 hover:bg-sky-50 rounded-lg transition" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice pointer-events-none"></i></button>`;
+                    let btnLunas = `<button type="button" onclick="openPelunasanModal('${safeId}')" class="text-emerald-500 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle pointer-events-none"></i></button>`;
+                    let btnEdit = `<button type="button" onclick="openEditModal('${safeId}')" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition relative z-10" title="Edit Transaksi"><i class="fas fa-edit pointer-events-none"></i></button>`;
+                    let btnHapus = `<button type="button" onclick="deleteNota('${safeId}')" class="text-rose-500 hover:text-rose-700 p-2 hover:bg-rose-50 rounded-lg transition" title="Hapus Data"><i class="fas fa-trash-alt pointer-events-none"></i></button>`;
 
                     const tr = document.createElement('tr');
                     tr.className = "border-b text-xs hover:bg-slate-50";
@@ -745,7 +761,7 @@
                         <td class="p-4 font-semibold">${fmt(r[3])}</td>
                         <td class="p-4 text-rose-500 font-bold">${fmt(r[5])}</td>
                         <td class="p-4 text-center">
-                            <div class="flex justify-center gap-1.5 text-base">
+                            <div class="flex justify-center items-center gap-1 text-base relative z-10">
                                 ${btnAwal}
                                 ${btnLunas}
                                 ${btnEdit}
@@ -767,8 +783,9 @@
                 tbodyExp.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
             } else {
                 listPureExp.forEach(r => {
+                    const safeExpId = String(r[4]).replace(/'/g, "\\'");
                     const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button onclick="deletePengeluaran('${r[4]}')" class="text-rose-500 p-1"><i class="fas fa-trash-alt"></i></button></td>`;
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeExpId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt pointer-events-none"></i></button></td>`;
                     tbodyExp.appendChild(tr);
                 });
             }
@@ -777,8 +794,9 @@
                 tbodyMutasi.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
             } else {
                 listMutasiOnly.forEach(r => {
+                    const safeMutasiId = String(r[4]).replace(/'/g, "\\'");
                     const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium italic text-blue-600">${r[1]}</td><td class="p-4 font-bold text-slate-700">${fmt(r[2])}</td><td class="p-4 text-center"><button onclick="deletePengeluaran('${r[4]}')" class="text-rose-500 p-1"><i class="fas fa-trash-alt"></i></button></td>`;
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium italic text-blue-600">${r[1]}</td><td class="p-4 font-bold text-slate-700">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeMutasiId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt pointer-events-none"></i></button></td>`;
                     tbodyMutasi.appendChild(tr);
                 });
             }
@@ -884,8 +902,8 @@
         }
 
         function openPelunasanModal(id) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
+            const item = getNotaItemById(id);
+            if(!item) return alert("Data nota tidak ditemukan pada sesi saat ini.");
             document.getElementById('lunas-id').value = item[0];
             document.getElementById('lunas-cust-name').innerText = item[1];
             const sisa = Number(item[5] || 0);
@@ -916,7 +934,14 @@
                 cetakNotaStruk(id, true);
 
                 setTimeout(async () => { 
-                    await updateDashboard(); 
+                    const m = document.getElementById('searchBulan').value;
+                    const y = document.getElementById('searchTahun').value;
+                    const now = new Date();
+                    if(Number(m) === now.getMonth() && Number(y) === now.getFullYear()){
+                        await updateDashboard(); 
+                    } else {
+                        await eksekusiCariBulanTahun();
+                    }
                     setLoading(false); 
                 }, 2000);
             } catch (error) {
@@ -926,38 +951,54 @@
         }
 
         function openEditModal(id) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
+            const item = getNotaItemById(id);
+            
+            if (!item) {
+                alert("Data nota tidak ditemukan!");
+                return;
+            }
 
             document.getElementById('edit-id').value = item[0];
-            document.getElementById('edit-nama').value = item[1];
-            document.getElementById('edit-dp').value = Number(item[4]).toLocaleString('id-ID');
+            document.getElementById('edit-nama').value = item[1] || '';
+            document.getElementById('edit-dp').value = Number(item[4] || 0).toLocaleString('id-ID');
             document.getElementById('edit-metode').value = item[6] || 'Cash';
 
             const container = document.getElementById('edit-items-container');
             container.innerHTML = '';
 
-            let rawItems = item[2];
+            let rawItems = item[2] || '';
+            
             try {
-                if(rawItems.startsWith('[')) rawItems = JSON.parse(rawItems);
+                if (typeof rawItems === 'string' && rawItems.startsWith('[')) {
+                    rawItems = JSON.parse(rawItems);
+                }
             } catch(e) {}
 
-            if(typeof rawItems === 'string' && rawItems.includes('x @')) {
+            if (Array.isArray(rawItems)) {
+                rawItems = rawItems.join(', ');
+            }
+
+            if (typeof rawItems === 'string' && rawItems.includes('x @')) {
                 const parts = rawItems.split(', ');
                 parts.forEach(p => {
                     const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
-                    if(matches) {
-                        addEditItemRow(matches[1], matches[2], matches[3].replace(/\./g, ''));
+                    if (matches) {
+                        const namaBarang = matches[1].trim();
+                        const qtyBarang = matches[2];
+                        const hargaBarang = matches[3].replace(/\./g, '');
+                        addEditItemRow(namaBarang, qtyBarang, hargaBarang);
                     } else {
                         addEditItemRow(p, 1, 0);
                     }
                 });
             } else {
-                addEditItemRow(rawItems, 1, item[3]);
+                addEditItemRow(String(rawItems), 1, item[3] || 0);
             }
 
             hitungTotalEdit();
-            document.getElementById('modal-edit').classList.remove('hidden');
+            
+            const modal = document.getElementById('modal-edit');
+            modal.classList.remove('hidden');
         }
 
         function addEditItemRow(name = '', qty = 1, price = 0) {
@@ -979,14 +1020,23 @@
         function hitungTotalEdit() {
             let total = 0;
             document.querySelectorAll('.edit-item-row').forEach(row => {
-                const qty = parseRupiah(row.querySelector('.edit-qty').value);
-                const price = parseRupiah(row.querySelector('.edit-price').value);
+                const qtyEl = row.querySelector('.edit-qty');
+                const priceEl = row.querySelector('.edit-price');
+                
+                const qty = qtyEl ? parseRupiah(qtyEl.value) : 0;
+                const price = priceEl ? parseRupiah(priceEl.value) : 0;
+                
                 const sub = qty * price;
                 total += sub;
-                row.querySelector('.edit-subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
+                
+                const subText = row.querySelector('.edit-subtotal-text');
+                if (subText) {
+                    subText.innerText = "Rp " + sub.toLocaleString('id-ID');
+                }
             });
 
-            const dp = parseRupiah(document.getElementById('edit-dp').value);
+            const dpEl = document.getElementById('edit-dp');
+            const dp = dpEl ? parseRupiah(dpEl.value) : 0;
             const sisa = Math.max(0, total - dp);
 
             document.getElementById('edit-grandTotal-text').innerText = "Rp " + total.toLocaleString('id-ID');
@@ -1090,16 +1140,15 @@
         }
     
         function cetakNotaStruk(id, isForceLunas) {
-            const item = globalDataCache.riwayatNota.find(r => r[0].toString() === id.toString());
-            if(!item) return;
+            const item = getNotaItemById(id);
+            if(!item) return alert("Gagal mencetak: Nota tidak ditemukan.");
             
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
             const totalBayar = Number(item[3] || 0);
             
-            let dpBayar = isForceLunas ? totalBayar : Number(item[4] || 0);
+            let dpBayar = Number(item[4] || 0);
             let sisaHutang = isForceLunas ? 0 : Number(item[5] || 0);
             
-            // Cek apakah murni lunas (sisa piutang 0 atau dipaksa lunas)
             const isLunasMurni = (sisaHutang === 0 || isForceLunas);
 
             document.getElementById('print-cust').innerText = item[1];
@@ -1113,27 +1162,25 @@
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            const metodeContainer = document.getElementById('print-metode-container');
-            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
+            
+            const badgeDPContainer = document.getElementById('print-badge-dp-container');
+            const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
+
+            dpRow.style.display = 'flex';
+            sisaRow.style.display = 'flex';
+            document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+            document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+            document.getElementById('print-sisa').innerText = fmt(sisaHutang);
+
+            document.getElementById('print-badge-dp').innerText = item[6] || 'Cash';
 
             if (isLunasMurni) {
-                // Sembunyikan baris DP dan Sisa Piutang jika langsung lunas
-                dpRow.style.display = 'none';
-                sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = isForceLunas ? (window._lastPelunasanMetode || item[6] || 'Cash') : (item[6] || 'Cash');
+                badgeLunasContainer.classList.remove('hidden');
+                document.getElementById('print-badge-lunas').innerText = window._lastPelunasanMetode || item[6] || 'Cash';
             } else {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
-                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-                document.getElementById('print-sisa').innerText = fmt(sisaHutang);
                 stempelElm.classList.add('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = item[6] || 'Cash';
+                badgeLunasContainer.classList.add('hidden');
             }
 
             const oldTitle = document.title;
@@ -1186,26 +1233,26 @@
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            const metodeContainer = document.getElementById('print-metode-container');
-            const metodeLunasContainer = document.getElementById('print-metode-lunas-container');
+            
+            const badgeDPContainer = document.getElementById('print-badge-dp-container');
+            const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
+
+            dpRow.style.display = 'flex';
+            sisaRow.style.display = 'flex';
+            document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
+            document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+            document.getElementById('print-sisa').innerText = fmt(sisaVal);
+
+            const metodeInput = document.getElementById('sumberDana').value;
+            document.getElementById('print-badge-dp').innerText = metodeInput;
 
             if (isLunasMurni) {
-                dpRow.style.display = 'none';
-                sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+                badgeLunasContainer.classList.remove('hidden');
+                document.getElementById('print-badge-lunas').innerText = metodeInput;
             } else {
-                dpRow.style.display = 'flex';
-                sisaRow.style.display = 'flex';
-                document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
-                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-                document.getElementById('print-sisa').innerText = fmt(sisaVal);
                 stempelElm.classList.add('hidden');
-                metodeContainer.style.display = 'block';
-                metodeLunasContainer.classList.add('hidden');
-                document.getElementById('print-metode-dp').innerText = document.getElementById('sumberDana').value;
+                badgeLunasContainer.classList.add('hidden');
             }
 
             const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");
@@ -1222,7 +1269,17 @@
         async function sendPost(payload) {
             try {
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-                setTimeout(async () => { await updateDashboard(); setLoading(false); }, 2000);
+                setTimeout(async () => { 
+                    const m = document.getElementById('searchBulan').value;
+                    const y = document.getElementById('searchTahun').value;
+                    const now = new Date();
+                    if(Number(m) === now.getMonth() && Number(y) === now.getFullYear()){
+                        await updateDashboard(); 
+                    } else {
+                        await eksekusiCariBulanTahun();
+                    }
+                    setLoading(false); 
+                }, 2000);
             } catch(e) { setLoading(false); }
         }
         

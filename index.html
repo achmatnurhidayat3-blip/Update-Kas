@@ -738,7 +738,44 @@
             
             const tbodyNota = document.getElementById('tbody-nota');
             tbodyNota.innerHTML = '';
-            const listNotaReal = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
+            
+            // Penggabungan (Merge) transaksi Nota berdasarkan ID Dasar atau Nama Pelanggan agar menjadi 1 baris
+            const rawNota = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
+            const mergedNotaMap = new Map();
+
+            rawNota.forEach(r => {
+                // Mencari key berupa nama customer (lowercase)
+                const key = String(r[1] || '').trim().toLowerCase();
+                
+                if (!mergedNotaMap.has(key)) {
+                    mergedNotaMap.set(key, { ...r });
+                } else {
+                    const existing = mergedNotaMap.get(key);
+                    const currentTgl = new Date(r[7] || 0);
+                    const existingTgl = new Date(existing[7] || 0);
+
+                    // Update ke data terbaru saat pelunasan dilakukan
+                    if (currentTgl >= existingTgl) {
+                        existing[0] = r[0]; // simpan ID terbaru
+                        existing[3] = r[3]; // Total
+                        existing[4] = r[4]; // DP
+                        existing[5] = r[5]; // Sisa Piutang
+                        existing[6] = r[6]; // Metode
+                        existing[7] = r[7]; // Tanggal Transaksi (Terbaru)
+                        if (r[2]) existing[2] = r[2]; // Update deskripsi item jika ada
+                    } else {
+                        // Jika ada sisa terendah dari transaksi pelunasan
+                        existing[5] = Math.min(Number(existing[5] || 0), Number(r[5] || 0));
+                    }
+                }
+            });
+
+            // Konversi Map ke Array dan Urutkan berdasarkan Tanggal Update Terbaru (Paling Atas)
+            const listNotaReal = Array.from(mergedNotaMap.values()).sort((a, b) => {
+                const tglA = new Date(a[7] || 0).getTime();
+                const tglB = new Date(b[7] || 0).getTime();
+                return tglB - tglA;
+            });
 
             if(listNotaReal.length === 0) {
                 tbodyNota.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Kosong</td></tr>`;
@@ -1090,18 +1127,15 @@
                 const p = parseRupiah(row.querySelector('.est-price').value);
                 if(n) strings.push(`- ${n} (Qty: ${q} x Rp ${Number(p).toLocaleString('id-ID')})`);
             });
-            
-            const bonusVal = document.getElementById('waBonusPaket').value;
-            let bonusInfo = (bonusVal && bonusVal !== "") ? `\n*Paket Bonus:* ${bonusVal}` : "";
 
             const persenVal = Number(document.getElementById('estPersenDP').value);
             let text = "";
             
             if (persenVal === 1) {
-                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Tagihan (Lunas):* ${document.getElementById('estTotal').innerText}\n\nTerima kasih kak! ✨`;
+                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}\n\n*Total Tagihan (Lunas):* ${document.getElementById('estTotal').innerText}\n\nTerima kasih kak! ✨`;
             } else {
                 const persenStr = (persenVal * 100) + "%";
-                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusInfo}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
+                text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
             }
             
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');

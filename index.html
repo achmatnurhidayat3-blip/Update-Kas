@@ -486,19 +486,19 @@
                 </div>
             </div>
 
-           <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
-    <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
-        <span class="text-slate-500">Total Keseluruhan</span>
-        <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
-    </div>
-    <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
-        <span id="print-dp-label">Uang Muka / DP</span>
-        <span id="print-dp" class="font-bold text-right">- Rp 0</span>
-    </div>
-    <div class="flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black" id="print-sisa-row">
-        <span id="print-sisa-label">Sisa Pelunasan</span>
-        <span id="print-sisa" class="text-right">Rp 0</span>
-    </div>
+            <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
+                <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-total-row">
+                    <span class="text-slate-500">Total Keseluruhan</span>
+                    <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
+                    <span id="print-dp-label">Uang Muka / DP</span>
+                    <span id="print-dp" class="font-bold text-right">- Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/20 text-sm font-black" id="print-sisa-row">
+                    <span id="print-sisa-label">Sisa Pelunasan</span>
+                    <span id="print-sisa" class="text-right">Rp 0</span>
+                </div>
             </div>
         </div>
 
@@ -739,12 +739,10 @@
             const tbodyNota = document.getElementById('tbody-nota');
             tbodyNota.innerHTML = '';
             
-            // Penggabungan (Merge) transaksi Nota berdasarkan ID Dasar atau Nama Pelanggan agar menjadi 1 baris
             const rawNota = localNotaList.filter(r => !r[0].toString().startsWith("TRF-"));
             const mergedNotaMap = new Map();
 
             rawNota.forEach(r => {
-                // Mencari key berupa nama customer (lowercase)
                 const key = String(r[1] || '').trim().toLowerCase();
                 
                 if (!mergedNotaMap.has(key)) {
@@ -754,23 +752,20 @@
                     const currentTgl = new Date(r[7] || 0);
                     const existingTgl = new Date(existing[7] || 0);
 
-                    // Update ke data terbaru saat pelunasan dilakukan
                     if (currentTgl >= existingTgl) {
-                        existing[0] = r[0]; // simpan ID terbaru
-                        existing[3] = r[3]; // Total
-                        existing[4] = r[4]; // DP
-                        existing[5] = r[5]; // Sisa Piutang
-                        existing[6] = r[6]; // Metode
-                        existing[7] = r[7]; // Tanggal Transaksi (Terbaru)
-                        if (r[2]) existing[2] = r[2]; // Update deskripsi item jika ada
+                        existing[0] = r[0]; 
+                        existing[3] = r[3]; 
+                        existing[4] = r[4]; 
+                        existing[5] = r[5]; 
+                        existing[6] = r[6]; 
+                        existing[7] = r[7]; 
+                        if (r[2]) existing[2] = r[2]; 
                     } else {
-                        // Jika ada sisa terendah dari transaksi pelunasan
                         existing[5] = Math.min(Number(existing[5] || 0), Number(r[5] || 0));
                     }
                 }
             });
 
-            // Konversi Map ke Array dan Urutkan berdasarkan Tanggal Update Terbaru (Paling Atas)
             const listNotaReal = Array.from(mergedNotaMap.values()).sort((a, b) => {
                 const tglA = new Date(a[7] || 0).getTime();
                 const tglB = new Date(b[7] || 0).getTime();
@@ -954,43 +949,43 @@
         }
 
         async function eksekusiPelunasanFinal() {
-    const id = document.getElementById('lunas-id').value;
-    const metodeBaru = document.getElementById('lunas-metode').value;
-    closePelunasanModal();
-    setLoading(true);
+            const id = document.getElementById('lunas-id').value;
+            const metodeBaru = document.getElementById('lunas-metode').value;
+            closePelunasanModal();
+            setLoading(true);
 
-    try {
-        await fetch(API_URL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'text/plain' }, 
-            // Kirim metode pelunasan secara spesifik
-            body: JSON.stringify({ 
-                tipe: "Pelunasan", 
-                id: id, 
-                metode: metodeBaru 
-            }) 
-        });
+            try {
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'text/plain' }, 
+                    body: JSON.stringify({ 
+                        tipe: "Pelunasan", 
+                        id: id, 
+                        metode: metodeBaru 
+                    }) 
+                });
 
-        window._lastPelunasanMetode = metodeBaru;
-        cetakNotaStruk(id, true);
+                window._lastPelunasanMetode = metodeBaru;
+                cetakNotaStruk(id, true);
 
-        setTimeout(async () => { 
-            const m = document.getElementById('searchBulan').value;
-            const y = document.getElementById('searchTahun').value;
-            const now = new Date();
-            if(Number(m) === now.getMonth() && Number(y) === now.getFullYear()){
-                await updateDashboard(); 
-            } else {
-                await eksekusiCariBulanTahun();
+                setTimeout(async () => { 
+                    const m = document.getElementById('searchBulan').value;
+                    const y = document.getElementById('searchTahun').value;
+                    const now = new Date();
+                    if(Number(m) === now.getMonth() && Number(y) === now.getFullYear()){
+                        await updateDashboard(); 
+                    } else {
+                        await eksekusiCariBulanTahun();
+                    }
+                    setLoading(false); 
+                }, 2000);
+            } catch (error) {
+                console.error("Gagal melakukan pelunasan:", error);
+                setLoading(false);
             }
-            setLoading(false); 
-        }, 2000);
-    } catch (error) {
-        console.error("Gagal melakukan pelunasan:", error);
-        setLoading(false);
-    }
-}
+        }
+
         function openEditModal(id) {
             const item = getNotaItemById(id);
             
@@ -1178,68 +1173,84 @@
         }
     
         function cetakNotaStruk(id, isForceLunas) {
-    const item = getNotaItemById(id);
-    if(!item) return alert("Gagal mencetak: Nota tidak ditemukan.");
-    
-    const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-    const totalBayar = Number(item[3] || 0);
-    const dpBayar = Number(item[4] || 0);
-    const sisaAwal = Number(item[5] || 0);
-    
-    const isLunasMurni = (sisaAwal === 0 || isForceLunas);
+            const item = getNotaItemById(id);
+            if(!item) return alert("Gagal mencetak: Nota tidak ditemukan.");
+            
+            const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
+            const totalBayar = Number(item[3] || 0);
+            const dpBayar = Number(item[4] || 0);
+            const sisaAwal = Number(item[5] || 0);
+            
+            // Cek apakah transaksi langsung lunas 100% dari awal / pelunasan
+            const isLunasLangsung = (dpBayar >= totalBayar || sisaAwal === 0) && !isForceLunas;
+            const isLunasMurni = (sisaAwal === 0 || isForceLunas);
 
-    document.getElementById('print-cust').innerText = item[1];
-    const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-    document.getElementById('print-tgl').innerText = tglFormatted;
-    
-    parseItemsToPrintRows(item[2], totalBayar);
-    
-    document.getElementById('print-total').innerText = fmt(totalBayar);
-    
-    const dpRow = document.getElementById('print-dp-row');
-    const sisaRow = document.getElementById('print-sisa-row');
-    const stempelElm = document.getElementById('print-stempel-lunas');
-    
-    const badgeDPContainer = document.getElementById('print-badge-dp-container');
-    const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
+            document.getElementById('print-cust').innerText = item[1];
+            const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+            document.getElementById('print-tgl').innerText = tglFormatted;
+            
+            parseItemsToPrintRows(item[2], totalBayar);
+            
+            document.getElementById('print-total').innerText = fmt(totalBayar);
+            
+            const dpRow = document.getElementById('print-dp-row');
+            const sisaRow = document.getElementById('print-sisa-row');
+            const stempelElm = document.getElementById('print-stempel-lunas');
+            
+            const badgeDPContainer = document.getElementById('print-badge-dp-container');
+            const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
 
-    dpRow.style.display = 'flex';
-    sisaRow.style.display = 'flex';
+            document.getElementById('print-badge-dp').innerText = item[6] || 'Cash';
 
-    // Menampilkan nominal DP Awal yang pernah dibayar
-    document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
-    document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+            // JIKA LANGSUNG LUNAS 100% DARI AWAL
+            if (isLunasLangsung) {
+                dpRow.style.display = 'none'; // Sembunyikan baris DP
+                sisaRow.style.display = 'none'; // Sembunyikan baris Sisa
+                
+                stempelElm.classList.remove('hidden');
+                badgeLunasContainer.classList.add('hidden'); // Cukup gunakan badge DP/Utama
+                badgeDPContainer.querySelector('span').innerHTML = `Metode Bayar: <strong class="uppercase text-sky-950">${item[6] || 'Cash'}</strong>`;
+            } 
+            // JIKA DILAKUKAN PELUNASAN SETELAH DP
+            else if (isLunasMurni) {
+                dpRow.style.display = 'flex';
+                sisaRow.style.display = 'flex';
 
-    document.getElementById('print-badge-dp').innerText = item[6] || 'Cash';
+                const nominalPelunasan = sisaAwal > 0 ? sisaAwal : (totalBayar - dpBayar);
+                
+                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+                document.getElementById('print-sisa-label').innerText = "Pelunasan (Dibayar)";
+                document.getElementById('print-sisa').innerText = fmt(nominalPelunasan);
+                
+                stempelElm.classList.remove('hidden');
+                badgeLunasContainer.classList.remove('hidden');
+                document.getElementById('print-badge-lunas').innerText = window._lastPelunasanMetode || item[6] || 'Cash';
+            } 
+            // JIKA MASIH STATUS DP (BELUM LUNAS)
+            else {
+                dpRow.style.display = 'flex';
+                sisaRow.style.display = 'flex';
 
-    if (isLunasMurni) {
-        // Jika status Pelunasan: Tampilkan nominal sisa yang dilunasi (sisaAwal), bukan angka 0
-        const nominalPelunasan = sisaAwal > 0 ? sisaAwal : (totalBayar - dpBayar);
-        
-        document.getElementById('print-sisa-label').innerText = "Pelunasan (Dibayar)";
-        document.getElementById('print-sisa').innerText = fmt(nominalPelunasan);
-        
-        stempelElm.classList.remove('hidden');
-        badgeLunasContainer.classList.remove('hidden');
-        document.getElementById('print-badge-lunas').innerText = window._lastPelunasanMetode || item[6] || 'Cash';
-    } else {
-        // Jika masih status DP (belum lunas): Tampilkan sisa tagihan yang belum dibayar
-        document.getElementById('print-sisa-label').innerText = "Sisa Pelunasan";
-        document.getElementById('print-sisa').innerText = fmt(sisaAwal);
-        
-        stempelElm.classList.add('hidden');
-        badgeLunasContainer.classList.add('hidden');
-    }
+                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+                document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
+                document.getElementById('print-sisa-label').innerText = "Sisa Pelunasan";
+                document.getElementById('print-sisa').innerText = fmt(sisaAwal);
+                
+                stempelElm.classList.add('hidden');
+                badgeLunasContainer.classList.add('hidden');
+            }
 
-    const oldTitle = document.title;
-    const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
-    const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
-    document.title = `${cleanCustName}_${cleanDate}`;
-    
-    window.print();
-    
-    setTimeout(() => { document.title = oldTitle; }, 1000);
-}
+            const oldTitle = document.title;
+            const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
+            const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
+            document.title = `${cleanCustName}_${cleanDate}`;
+            
+            window.print();
+            
+            setTimeout(() => { document.title = oldTitle; }, 1000);
+        }
+
         function simpanDanCetak() {
             const custName = document.getElementById('custName').value;
             if(!custName) return alert("Masukkan nama pelanggan untuk cetak nota!");
@@ -1268,7 +1279,7 @@
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
             const dpVal = parseRupiah(document.getElementById('inputDP').value || 0);
             const sisaVal = Math.max(0, total - dpVal);
-            const isLunasMurni = (sisaVal === 0);
+            const isLunasLangsung = (sisaVal === 0 || dpVal >= total);
 
             const fmt = (val) => "Rp " + Number(val).toLocaleString('id-ID');
 
@@ -1283,21 +1294,25 @@
             
             const badgeDPContainer = document.getElementById('print-badge-dp-container');
             const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
-
-            dpRow.style.display = 'flex';
-            sisaRow.style.display = 'flex';
-            document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
-            document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
-            document.getElementById('print-sisa').innerText = fmt(sisaVal);
-
             const metodeInput = document.getElementById('sumberDana').value;
-            document.getElementById('print-badge-dp').innerText = metodeInput;
 
-            if (isLunasMurni) {
-                stempelElm.classList.remove('hidden');
-                badgeLunasContainer.classList.remove('hidden');
-                document.getElementById('print-badge-lunas').innerText = metodeInput;
+            // JIKA HARI INI DIBAYAR LUNAS LANGSUNG
+            if (isLunasLangsung) {
+                dpRow.style.display = 'none'; // Sembunyikan Uang Muka/DP
+                sisaRow.style.display = 'none'; // Sembunyikan Sisa
+                stempelElm.classList.remove('hidden'); // Tampilkan stempel LUNAS
+                
+                badgeLunasContainer.classList.add('hidden');
+                badgeDPContainer.querySelector('span').innerHTML = `Metode Bayar: <strong class="uppercase text-sky-950">${metodeInput}</strong>`;
             } else {
+                dpRow.style.display = 'flex';
+                sisaRow.style.display = 'flex';
+                document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
+                document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
+                document.getElementById('print-sisa-label').innerText = "Sisa Pelunasan";
+                document.getElementById('print-sisa').innerText = fmt(sisaVal);
+                
+                document.getElementById('print-badge-dp').innerText = metodeInput;
                 stempelElm.classList.add('hidden');
                 badgeLunasContainer.classList.add('hidden');
             }
